@@ -11,9 +11,9 @@ public class Person
 
     public static final String TAG = Person.class.getSimpleName();
 
-    public int eat(String food)
+    public int eat(String food, int number)
     {
-        Log.i(TAG, "eat:" + food + "," + 10);
+        Log.i(TAG, "eat:" + food + "," + number);
         return 10;
     }
 
