@@ -26,7 +26,7 @@ public class FMethodProxy
      */
     public Method getSuperMethod() throws NoSuchMethodException
     {
-        Method method = mProxyClass.getDeclaredMethod(mMethodName + FProxy.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX,
+        Method method = mProxyClass.getDeclaredMethod(mMethodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX,
                 mArgsClass);
         return method;
     }

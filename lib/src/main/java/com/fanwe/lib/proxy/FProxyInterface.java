@@ -3,7 +3,7 @@ package com.fanwe.lib.proxy;
 /**
  * 代理要实现的接口
  */
-public interface FProxy
+public interface FProxyInterface
 {
     /**
      * 代理类的后缀名
