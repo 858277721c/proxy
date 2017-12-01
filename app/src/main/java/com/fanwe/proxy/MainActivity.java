@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity
                     return null;
                 }
             });
+            person.eat("apple");
         } catch (Exception e)
         {
             e.printStackTrace();
