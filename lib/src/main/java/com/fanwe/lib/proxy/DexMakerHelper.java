@@ -184,4 +184,36 @@ public class DexMakerHelper
         }
         return arrResult;
     }
+
+    public static Class<?> getPackedClass(Class<?> primitive)
+    {
+        if (primitive == boolean.class)
+        {
+            return Boolean.class;
+        } else if (primitive == byte.class)
+        {
+            return Byte.class;
+        } else if (primitive == char.class)
+        {
+            return Character.class;
+        } else if (primitive == double.class)
+        {
+            return Double.class;
+        } else if (primitive == float.class)
+        {
+            return Float.class;
+        } else if (primitive == int.class)
+        {
+            return Integer.class;
+        } else if (primitive == long.class)
+        {
+            return Long.class;
+        } else if (primitive == short.class)
+        {
+            return Short.class;
+        } else
+        {
+            return primitive;
+        }
+    }
 }

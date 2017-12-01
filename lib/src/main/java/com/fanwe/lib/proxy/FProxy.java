@@ -3,8 +3,10 @@ package com.fanwe.lib.proxy;
 import android.content.Context;
 
 import com.android.dx.Code;
+import com.android.dx.Comparison;
 import com.android.dx.DexMaker;
 import com.android.dx.FieldId;
+import com.android.dx.Label;
 import com.android.dx.Local;
 import com.android.dx.MethodId;
 import com.android.dx.TypeId;
@@ -99,6 +101,7 @@ public class FProxy
 
         String methodName = null;
         Class<?> classReturn = null;
+        Class<?> classReturnPack = null;
         Class<?>[] classArgs = null;
 
         MethodId<?, ?> methodNotifyInterceptor = helper.getMethod(helper.getType(FProxyHelper.class),
@@ -123,6 +126,12 @@ public class FProxy
 
             // 保存返回值
             Local localReturn = code.newLocal(helper.getType(classReturn));
+            Local localReturnPack = null;
+            if (classReturn.isPrimitive())
+            {
+                classReturnPack = DexMakerHelper.getPackedClass(classReturn);
+                localReturnPack = code.newLocal(helper.getType(classReturnPack));
+            }
 
             // Object localObjectReturn;
             Local<Object> localObjectReturn = code.newLocal(TypeId.OBJECT);
@@ -173,7 +182,7 @@ public class FProxy
                     {
                         TypeId typePrimitive = helper.getType(classArg);
                         MethodId methodValueOf = helper.getMethod(typePrimitive,
-                                classArg, "valueOf", classArg);
+                                DexMakerHelper.getPackedClass(classArg), "valueOf", classArg);
 
                         code.invokeStatic(methodValueOf, localObjectTmp,
                                 helper.getParameter(code, i, classArg));
@@ -200,29 +209,31 @@ public class FProxy
             {
                 if (classReturn.isPrimitive())
                 {
-                    // here use one label, if use two, need jump once and mark twice
-                    Label ifBody = new Label();
-                    code.loadConstant(retPackLocal, null);
-                    code.compare(Comparison.EQ, ifBody, retObjLocal, retPackLocal);
+                    Label ifNull = new Label();
+                    code.loadConstant(localReturnPack, null);
+                    code.compare(Comparison.EQ, ifNull, localObjectReturn, localReturnPack);
 
-                    code.cast(retPackLocal, retObjLocal);
-                    methodId = TypeId.get(Const.getPackedType(retClass)).getMethod(methodReturnType, Const.getPrimitiveValueMethodName(retClass));
-                    code.invokeVirtual(methodId, retLocal, retPackLocal);
-                    code.returnValue(retLocal);
+                    code.cast(localReturn, localObjectReturn);
 
-                    code.mark(ifBody);
-                    code.loadConstant(retLocal, 0);
-                    code.returnValue(retLocal);
+                    MethodId methodPrimitiveValue = helper.getMethod(helper.getType(classReturnPack),
+                            classReturn, classReturn.getSimpleName() + "Value");
+
+                    code.invokeVirtual(methodPrimitiveValue, localReturn, localReturnPack);
+                    code.returnValue(localReturn);
+
+                    code.mark(ifNull);
+                    code.loadConstant(localReturn, 0);
+                    code.returnValue(localReturn);
                 } else
                 {
-                    code.cast(retLocal, retObjLocal);
-                    code.returnValue(retLocal);
+                    code.cast(localReturn, localObjectReturn);
+                    code.returnValue(localReturn);
                 }
             }
         }
 
         ClassLoader loader = getDexMaker().generateAndLoad(getClass().getClassLoader(), dirDex);
-        Class<?> classSub = loader.loadClass(mTargetClass.getName() + ISDProxy.PROXY_CLASS_SUFFIX);
+        Class<?> classSub = loader.loadClass(mTargetClass.getName() + FProxyInterface.PROXY_CLASS_SUFFIX);
         Object instance = classSub.newInstance();
 
         return instance;
