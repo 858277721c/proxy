@@ -129,6 +129,9 @@ public class DexMakerHelper
             if (clazz == Void.class)
             {
                 typeId = TypeId.VOID;
+            } else if (clazz == Object.class)
+            {
+                typeId = TypeId.OBJECT;
             } else
             {
                 typeId = TypeId.get(clazz);

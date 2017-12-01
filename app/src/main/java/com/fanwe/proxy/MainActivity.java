@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public Object intercept(Object proxy, Object[] args, FMethodProxy methodProxy)
                 {
-                    return 999;
+                    return null;
                 }
             });
             Object result = person.eat("apple");
