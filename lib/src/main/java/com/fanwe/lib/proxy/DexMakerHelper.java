@@ -104,8 +104,7 @@ public class DexMakerHelper
      */
     public void declareField(int flags, Class<?> fieldClass, String fieldName, Object fieldValue)
     {
-        TypeId typeField = getType(fieldClass);
-        FieldId<?, ?> field = getTypeSub().getField(typeField, fieldName);
+        FieldId<?, ?> field = getField(getTypeSub(), fieldClass, fieldName);
         getDexMaker().declare(field, flags, fieldValue);
     }
 
@@ -120,7 +119,7 @@ public class DexMakerHelper
      */
     public Code declareMethod(int flags, Class<?> classReturn, String methodName, Class<?>... parameters)
     {
-        MethodId<?, ?> method = getMethod(mSuperClass, classReturn, methodName, parameters);
+        MethodId<?, ?> method = getMethod(getTypeSub(), classReturn, methodName, parameters);
         return getDexMaker().declare(method, flags);
     }
 
@@ -135,9 +134,15 @@ public class DexMakerHelper
         return typeId;
     }
 
-    public MethodId<?, ?> getMethod(Class<?> classTarget, Class<?> classReturn, String methodName, Class<?>... parameters)
+    public FieldId<?, ?> getField(TypeId<?> typeTarget, Class<?> fieldClass, String fieldName)
     {
-        TypeId typeTarget = getType(classTarget);
+        TypeId typeField = getType(fieldClass);
+        FieldId<?, ?> field = typeTarget.getField(typeField, fieldName);
+        return field;
+    }
+
+    public MethodId<?, ?> getMethod(TypeId<?> typeTarget, Class<?> classReturn, String methodName, Class<?>... parameters)
+    {
         TypeId typeReturn = getType(classReturn);
         TypeId[] typeParameters = classToTypeId(parameters);
 
