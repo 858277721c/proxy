@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
                     return null;
                 }
             });
-            Object result = person.eat("apple", 100);
+            Object result = person.eat("apple", 100, 1.1f);
             Log.i(TAG, String.valueOf(result));
         } catch (Exception e)
         {
