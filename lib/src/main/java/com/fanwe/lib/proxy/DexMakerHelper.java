@@ -181,7 +181,7 @@ public class DexMakerHelper
 
     public <T> Local<T> getParameter(Code code, int index, Class<T> clazz)
     {
-        TypeId type = getType(clazz);
+        TypeId<T> type = getType(clazz);
         return code.getParameter(index, type);
     }
 

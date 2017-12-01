@@ -242,8 +242,8 @@ public class FProxy
             code = helper.declareMethod(item.getModifiers(), classReturn, methodNameSuper, classArgs);
 
             localReturn = code.newLocal(helper.getType(classReturn));
-            localThis = helper.getThis(code);
             Local[] localSuperArgsValue = null;
+            localThis = helper.getThis(code);
 
             MethodId methodSuper = helper.getMethod(helper.getTypeSuper(), classReturn, methodName);
             if (classArgs.length > 0)
