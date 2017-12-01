@@ -147,7 +147,15 @@ public class DexMakerHelper
 
     public <T, R> MethodId<T, R> getMethod(TypeId<T> typeTarget, Class<R> classReturn, String methodName, Class<?>... parameters)
     {
-        TypeId typeReturn = getType(classReturn);
+        TypeId typeReturn = null;
+        if (classReturn == Void.class)
+        {
+            typeReturn = TypeId.VOID;
+        } else
+        {
+            typeReturn = getType(classReturn);
+        }
+
         TypeId[] typeParameters = classToTypeId(parameters);
 
         if (typeParameters != null)

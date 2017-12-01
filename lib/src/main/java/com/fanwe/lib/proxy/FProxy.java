@@ -69,7 +69,7 @@ public class FProxy
         helper.declareField(Modifier.PRIVATE,
                 FMethodInterceptor.class, FProxyInterface.FIELD_NAME_METHODINTERCEPTOR, null);
         /**
-         * public setMethodInterceptor$FProxy$(FMethodInterceptor interceptor)
+         * public void setMethodInterceptor$FProxy$(FMethodInterceptor interceptor)
          * {
          *     mMethodInterceptor = handler;
          * }
