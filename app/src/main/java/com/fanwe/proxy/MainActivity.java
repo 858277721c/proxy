@@ -16,12 +16,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         try
         {
             FProxy proxy = new FProxy(this);
             proxy.setSuperClass(Person.class);
-            proxy.newProxyInstance(new FMethodInterceptor()
+            Person person = (Person) proxy.newProxyInstance(new FMethodInterceptor()
             {
                 @Override
                 public Object intercept(Object proxy, Object[] args, FMethodProxy methodProxy)

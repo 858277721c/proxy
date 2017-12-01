@@ -52,6 +52,17 @@ public class FProxy
 
         final DexMakerHelper helper = new DexMakerHelper(mSuperClass);
 
+        makeProxyClass(helper);
+
+        ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), dirDex);
+        Class<?> classSub = loader.loadClass(mSuperClass.getName() + FProxyInterface.PROXY_CLASS_SUFFIX);
+        Object instance = classSub.newInstance();
+
+        return instance;
+    }
+
+    private void makeProxyClass(DexMakerHelper helper)
+    {
         // public class com/fanwe/model/Person$FProxy$ extends com/fanwe/model/Person implements FProxyInterface
         helper.declareClass(Modifier.PUBLIC, FProxyInterface.class);
 
@@ -220,11 +231,5 @@ public class FProxy
                 }
             }
         }
-
-        ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), dirDex);
-        Class<?> classSub = loader.loadClass(mSuperClass.getName() + FProxyInterface.PROXY_CLASS_SUFFIX);
-        Object instance = classSub.newInstance();
-
-        return instance;
     }
 }
