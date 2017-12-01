@@ -216,7 +216,7 @@ public class FProxy
                     code.loadConstant(localReturnPack, null);
                     code.compare(Comparison.EQ, ifNull, localObjectReturn, localReturnPack);
 
-                    code.cast(localReturn, localObjectReturn);
+                    code.cast(localReturnPack, localObjectReturn);
 
                     MethodId methodPrimitiveValue = helper.getMethod(helper.getType(classReturnPack),
                             classReturn, classReturn.getSimpleName() + "Value");
