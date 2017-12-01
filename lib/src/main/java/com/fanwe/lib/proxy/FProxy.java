@@ -243,12 +243,19 @@ public class FProxy
 
             localReturn = code.newLocal(helper.getType(classReturn));
             localThis = helper.getThis(code);
+            Local[] localSuperArgsValue = null;
 
             MethodId methodSuper = helper.getMethod(helper.getTypeSuper(), classReturn, methodName);
             if (classArgs.length > 0)
             {
+                localSuperArgsValue = new Local[classArgs.length];
+                for (int i = 0; i < classArgs.length; i++)
+                {
+                    localSuperArgsValue[i] = helper.getParameter(code, i, classArgs[i]);
+                }
+
                 code.invokeSuper(methodSuper, classReturn == Void.class ? null : localReturn, localThis,
-                        localArgsValue);
+                        localSuperArgsValue);
             } else
             {
                 code.invokeSuper(methodSuper, classReturn == Void.class ? null : localReturn, localThis);
