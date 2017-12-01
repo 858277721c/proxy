@@ -10,7 +10,6 @@ import com.android.dx.MethodId;
 import com.android.dx.TypeId;
 
 import java.io.File;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -98,33 +97,57 @@ public class FProxy
 
         final Method[] arrMethod = getTargetClass().getDeclaredMethods();
 
-        int paramCount = 0;
+        String methodName = null;
         Class<?> classReturn = null;
+        Class<?>[] classArgs = null;
 
-        MethodId<?, ?> methodSub = null;
-        MethodId<?, ?> methodInvoke = Utils.getMethodId(typeMethodInterceptor,
-                InvocationHandler.class.getDeclaredMethod("invoke", Object.class, Method.class, Object[].class));
+        MethodId<?, ?> methodNotifyInterceptor = helper.getMethod(helper.getType(FProxyHelper.class),
+                Object.class, FProxyHelper.METHOD_NAME_NOTIFYINTERCEPTOR,
+                FMethodInterceptor.class, Class.class, String.class, Class[].class, Object[].class, Object.class);
 
-        TypeId<?> typeReturn = null;
-        TypeId<Object[]> typeArrObject = TypeId.get(Object[].class);
         for (Method item : arrMethod)
         {
-            methodSub = Utils.getMethodId(typeSub, item);
-            if (methodSub == null)
+            methodName = item.getName();
+            if (methodName.contains("$"))
             {
                 continue;
             }
-            paramCount = item.getParameterTypes().length;
             classReturn = item.getReturnType();
-            typeReturn = TypeId.get(classReturn);
+            classArgs = item.getParameterTypes();
 
-            code = getDexMaker().declare(methodSub, item.getModifiers());  // 生成方法体
+            code = helper.declareMethod(item.getModifiers(), classReturn, methodName, classArgs); // 生成方法体
 
-            Local<?> localReturn = code.newLocal(typeReturn);
-            Local<Object> localInvokeResult = code.newLocal(TypeId.OBJECT); // Object invokeResult;
-            Local<Method> localMethod = code.newLocal(typeMethod); // Method method;
-            Local<Integer> localParam = code.newLocal(TypeId.INT);
-            Local<Object[]> localArrParam = code.newLocal(typeArrObject); // Object[] arrParam = new Object[paramCount];
+            Local localThis = helper.getThis(code); // 保存当前代理对象
+
+            // ---------- 变量 ----------
+
+            // Object localObjectReturn;
+            Local<Object> localObjectReturn = code.newLocal(TypeId.OBJECT);
+
+            // FMethodInterceptor localMethodInterceptor;
+            Local<FMethodInterceptor> localMethodInterceptor = code.newLocal(helper.getType(FMethodInterceptor.class));
+            // Class localClass;
+            Local<Class> localClass = code.newLocal(helper.getType(Class.class));
+            // String localMethodName;
+            Local<String> localMethodName = code.newLocal(helper.getType(String.class));
+            // Class[] localArgsClass;
+            Local<Class[]> localArgsClass = code.newLocal(helper.getType(Class[].class));
+            // Object[] localArgsValue;
+            Local<Object[]> localArgsValue = code.newLocal(helper.getType(Object[].class));
+
+            // ---------- 变量赋值 ----------
+            code.iget(fieldMethodInterceptor, localMethodInterceptor, localThis);
+
+            MethodId methodGetClass = helper.getMethod(helper.getTypeSub(),
+                    Class.class, "getClass");
+            code.invokeVirtual(methodGetClass, localClass, localThis);
+
+            code.loadConstant(localMethodName, methodName);
+
+
+            // FProxyHelper.notifyInterceptor(......);
+            code.invokeStatic(methodNotifyInterceptor, localObjectReturn,
+                    localMethodInterceptor, localClass, localMethodName, localArgsClass, localArgsValue, localThis);
 
             localThis = code.getThis(typeSub);
 
@@ -140,11 +163,11 @@ public class FProxy
                 }
                 code.loadConstant(localArrParam, arrParam);
 
-                code.invokeVirtual(methodInvoke, localInvokeResult, localThis,
+                code.invokeVirtual(methodNotifyInterceptor, localInvokeResult, localThis,
                         localThis, localMethod, localArrParam);
             } else
             {
-                code.invokeVirtual(methodInvoke, localInvokeResult, localThis);
+                code.invokeVirtual(methodNotifyInterceptor, localInvokeResult, localThis);
             }
 
             if (classReturn != Void.class)

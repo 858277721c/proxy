@@ -5,6 +5,8 @@ package com.fanwe.lib.proxy;
  */
 public class FProxyHelper
 {
+    public static final String METHOD_NAME_NOTIFYINTERCEPTOR = "notifyInterceptor";
+
     /**
      * 通知方法拦截对象
      *
