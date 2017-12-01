@@ -11,10 +11,10 @@ public class Person
 
     public static final String TAG = Person.class.getSimpleName();
 
-    public String eat(String food)
+    public int eat(String food)
     {
         Log.i(TAG, "eat:" + food + "," + 10);
-        return "good";
+        return 10;
     }
 
 }
