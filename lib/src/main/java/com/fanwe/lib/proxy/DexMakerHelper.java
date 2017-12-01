@@ -4,6 +4,7 @@ import com.android.dx.Code;
 import com.android.dx.DexMaker;
 import com.android.dx.FieldId;
 import com.android.dx.Local;
+import com.android.dx.MethodId;
 import com.android.dx.TypeId;
 
 import java.util.HashMap;
@@ -28,17 +29,6 @@ public class DexMakerHelper
         mTypeSuper = getType(mSuperClass);
         final String typeSubName = mTypeSuper.getName().replace(";", FProxyInterface.PROXY_CLASS_SUFFIX + ";");
         mTypeSub = TypeId.get(typeSubName);
-    }
-
-    public TypeId<?> getType(Class<?> clazz)
-    {
-        TypeId typeId = mMapClassType.get(clazz);
-        if (typeId == null)
-        {
-            typeId = TypeId.get(clazz);
-            mMapClassType.put(clazz, typeId);
-        }
-        return typeId;
     }
 
     public TypeId<?> getTypeSuper()
@@ -115,8 +105,51 @@ public class DexMakerHelper
     public void declareField(int flags, Class<?> fieldClass, String fieldName, Object fieldValue)
     {
         TypeId typeField = getType(fieldClass);
-        FieldId<?, FMethodInterceptor> field = getTypeSub().getField(typeField, fieldName);
+        FieldId<?, ?> field = getTypeSub().getField(typeField, fieldName);
         getDexMaker().declare(field, flags, fieldValue);
+    }
+
+    /**
+     * 声明方法
+     *
+     * @param flags       权限
+     * @param classReturn 返回值类型
+     * @param methodName  方法名称
+     * @param parameters  方法类型class数组
+     * @return
+     */
+    public Code declareMethod(int flags, Class<?> classReturn, String methodName, Class<?>... parameters)
+    {
+        MethodId<?, ?> method = getMethod(mSuperClass, classReturn, methodName, parameters);
+        return getDexMaker().declare(method, flags);
+    }
+
+    public TypeId<?> getType(Class<?> clazz)
+    {
+        TypeId typeId = mMapClassType.get(clazz);
+        if (typeId == null)
+        {
+            typeId = TypeId.get(clazz);
+            mMapClassType.put(clazz, typeId);
+        }
+        return typeId;
+    }
+
+    public MethodId<?, ?> getMethod(Class<?> classTarget, Class<?> classReturn, String methodName, Class<?>... parameters)
+    {
+        TypeId typeTarget = getType(classTarget);
+        TypeId typeReturn = getType(classReturn);
+        TypeId[] typeParameters = classToTypeId(parameters);
+
+        MethodId<?, ?> method = null;
+        if (typeParameters != null)
+        {
+            method = typeTarget.getMethod(typeReturn, methodName, typeParameters);
+        } else
+        {
+            method = typeTarget.getMethod(typeReturn, methodName);
+        }
+        return method;
     }
 
     public Local getThis(Code code)

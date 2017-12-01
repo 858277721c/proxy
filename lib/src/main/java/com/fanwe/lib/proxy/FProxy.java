@@ -84,12 +84,11 @@ public class FProxy
          *     mInvocationHandler = handler;
          * }
          */
-        MethodId<?, Void> methodSetMethodInterceptor$FProxy$ = typeSub.getMethod(TypeId.VOID,
-                FProxyInterface.METHOD_NAME_SETMETHODINTERCEPTOR,
-                TypeId.get(FMethodInterceptor.class));
 
-        code = getDexMaker().declare(methodSetMethodInterceptor$FProxy$, Modifier.PUBLIC);
-        localThis = code.getThis(typeSub);
+        code = helper.declareMethod(Modifier.PUBLIC,
+                Void.class, FProxyInterface.METHOD_NAME_SETMETHODINTERCEPTOR,
+                FMethodInterceptor.class);
+
         code.iput(fieldMethodInterceptor, localThis, code.getParameter(0, typeMethodInterceptor));
         code.returnVoid();
 
