@@ -182,8 +182,8 @@ public class FProxy
 
                     if (classArg.isPrimitive())
                     {
-                        TypeId typePrimitive = helper.getType(DexMakerHelper.getPackedClass(classArg));
-                        MethodId methodValueOf = helper.getMethod(typePrimitive,
+                        TypeId typePrimitivePack = helper.getType(DexMakerHelper.getPackedClass(classArg));
+                        MethodId methodValueOf = helper.getMethod(typePrimitivePack,
                                 DexMakerHelper.getPackedClass(classArg), "valueOf", classArg);
 
                         code.invokeStatic(methodValueOf, localObjectTmp,
