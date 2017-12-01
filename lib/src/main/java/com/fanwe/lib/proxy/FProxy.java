@@ -135,6 +135,11 @@ public class FProxy
             // Object[] localArgsValue;
             Local<Object[]> localArgsValue = code.newLocal(helper.getType(Object[].class));
 
+            // Int localIntTmp;
+            Local<Integer> localIntTmp = code.newLocal(TypeId.INT);
+            // Class localClassTmp;
+            Local<Class> localClassTmp = code.newLocal(helper.getType(Class.class));
+
             // ---------- 变量赋值 ----------
             code.iget(fieldMethodInterceptor, localMethodInterceptor, localThis);
 
@@ -143,6 +148,38 @@ public class FProxy
             code.invokeVirtual(methodGetClass, localClass, localThis);
 
             code.loadConstant(localMethodName, methodName);
+
+            if (classArgs.length > 0)
+            {
+                code.loadConstant(localIntTmp, classArgs.length);
+                code.newArray(localArgsClass, localIntTmp);
+                code.newArray(localArgsValue, localIntTmp);
+
+                Class classArg = null;
+                for (int i = 0; i < classArgs.length; i++)
+                {
+                    classArg = classArgs[i];
+
+                    code.loadConstant(localIntTmp, i);
+                    code.loadConstant(localClassTmp, classArg);
+                    code.aput(localArgsClass, localIntTmp, localClassTmp);
+
+                    if (classArg.isPrimitive())
+                    {
+                        TypeId packedClassType = TypeId.get(Const.getPackedType(argsClass[i]));
+                        methodId = packedClassType.getMethod(packedClassType, "valueOf", argsTypeId[i]);
+                        code.invokeStatic(methodId, tmpNumberLocal, code.getParameter(i, argsTypeId[i]));
+                        code.aput(argsValueLocal, intLocal, tmpNumberLocal);
+                    } else
+                    {
+                        code.aput(localArgsValue, localIntTmp, helper.getParameter(code, i, classArg));
+                    }
+                }
+            } else
+            {
+                code.loadConstant(localArgsClass, null);
+                code.loadConstant(localArgsValue, null);
+            }
 
 
             // FProxyHelper.notifyInterceptor(......);
