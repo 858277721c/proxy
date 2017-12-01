@@ -55,7 +55,7 @@ public class FProxy
         makeProxyClass(helper);
 
         ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), dirDex);
-        Class<?> classSub = loader.loadClass(mSuperClass.getName() + FProxyInterface.PROXY_CLASS_SUFFIX);
+        Class<?> classSub = loader.loadClass(helper.getProxyClassName());
 
         FProxyInterface instance = (FProxyInterface) classSub.newInstance();
         instance.setMethodInterceptor$FProxy$(methodInterceptor);

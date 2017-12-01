@@ -31,6 +31,11 @@ public class DexMakerHelper
         mTypeSub = TypeId.get(typeSubName);
     }
 
+    public String getProxyClassName()
+    {
+        return mSuperClass.getName() + FProxyInterface.PROXY_CLASS_SUFFIX;
+    }
+
     public TypeId<?> getTypeSuper()
     {
         return mTypeSuper;
