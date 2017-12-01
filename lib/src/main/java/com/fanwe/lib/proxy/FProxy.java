@@ -128,11 +128,11 @@ public class FProxy
 
             // 保存返回值
             Local localReturn = code.newLocal(helper.getType(classReturn));
-            Local localReturnPack = null;
+            Local localPackReturn = null;
             if (classReturn.isPrimitive())
             {
                 classReturnPack = DexMakerHelper.getPackedClass(classReturn);
-                localReturnPack = code.newLocal(helper.getType(classReturnPack));
+                localPackReturn = code.newLocal(helper.getType(classReturnPack));
             }
 
             // Object localObjectReturn;
@@ -213,15 +213,15 @@ public class FProxy
                 if (classReturn.isPrimitive())
                 {
                     Label ifNull = new Label();
-                    code.loadConstant(localReturnPack, null);
-                    code.compare(Comparison.EQ, ifNull, localObjectReturn, localReturnPack);
+                    code.loadConstant(localPackReturn, null);
+                    code.compare(Comparison.EQ, ifNull, localObjectReturn, localPackReturn);
 
-                    code.cast(localReturnPack, localObjectReturn);
+                    code.cast(localPackReturn, localObjectReturn);
 
                     MethodId methodPrimitiveValue = helper.getMethod(helper.getType(classReturnPack),
                             classReturn, classReturn.getSimpleName() + "Value");
 
-                    code.invokeVirtual(methodPrimitiveValue, localReturn, localReturnPack);
+                    code.invokeVirtual(methodPrimitiveValue, localReturn, localPackReturn);
                     code.returnValue(localReturn);
 
                     code.mark(ifNull);
