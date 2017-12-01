@@ -102,6 +102,7 @@ public class FProxy
         final Method[] arrMethod = getSuperClass().getDeclaredMethods();
 
         String methodName = null;
+        String methodNameSuper = null;
         Class<?> classReturn = null;
         Class<?> classReturnPack = null;
         Class<?>[] classArgs = null;
@@ -176,7 +177,6 @@ public class FProxy
                 {
                     classArg = classArgs[i];
 
-
                     code.loadConstant(localIntTmp, i);
                     code.loadConstant(localClassTmp, classArg);
                     code.aput(localArgsClass, localIntTmp, localClassTmp);
@@ -235,6 +235,31 @@ public class FProxy
                     code.cast(localReturn, localObjectReturn);
                     code.returnValue(localReturn);
                 }
+            }
+
+            // 创建调用父类的方法
+            methodNameSuper = methodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX;
+            code = helper.declareMethod(item.getModifiers(), classReturn, methodNameSuper, classArgs);
+
+            localReturn = code.newLocal(helper.getType(classReturn));
+            localThis = helper.getThis(code);
+
+            MethodId methodSuper = helper.getMethod(helper.getTypeSuper(), classReturn, methodName);
+            if (classArgs.length > 0)
+            {
+                code.invokeSuper(methodSuper, classReturn == Void.class ? null : localReturn, localThis,
+                        localArgsValue);
+            } else
+            {
+                code.invokeSuper(methodSuper, classReturn == Void.class ? null : localReturn, localThis);
+            }
+
+            if (classReturn == Void.class)
+            {
+                code.returnVoid();
+            } else
+            {
+                code.returnValue(localReturn);
             }
         }
     }
