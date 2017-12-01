@@ -127,14 +127,13 @@ public class DexMakerHelper
         return typeId;
     }
 
-    public FieldId<?, ?> getField(TypeId<?> typeTarget, Class<?> fieldClass, String fieldName)
+    public <T, F> FieldId<T, F> getField(TypeId<T> typeTarget, Class<F> fieldClass, String fieldName)
     {
-        TypeId typeField = getType(fieldClass);
-        FieldId<?, ?> field = typeTarget.getField(typeField, fieldName);
+        FieldId<T, F> field = typeTarget.getField(getType(fieldClass), fieldName);
         return field;
     }
 
-    public MethodId<?, Void> getConstructor(TypeId<?> typeTarget, Class<?>... parameters)
+    public <T> MethodId<T, Void> getConstructor(TypeId<T> typeTarget, Class<?>... parameters)
     {
         TypeId[] typeParameters = classToTypeId(parameters);
         if (typeParameters != null)
@@ -146,7 +145,7 @@ public class DexMakerHelper
         }
     }
 
-    public MethodId<?, ?> getMethod(TypeId<?> typeTarget, Class<?> classReturn, String methodName, Class<?>... parameters)
+    public <T, R> MethodId<T, R> getMethod(TypeId<T> typeTarget, Class<R> classReturn, String methodName, Class<?>... parameters)
     {
         TypeId typeReturn = getType(classReturn);
         TypeId[] typeParameters = classToTypeId(parameters);

@@ -121,6 +121,9 @@ public class FProxy
 
             // ---------- 变量 ----------
 
+            // 保存返回值
+            Local localReturn = code.newLocal(helper.getType(classReturn));
+
             // Object localObjectReturn;
             Local<Object> localObjectReturn = code.newLocal(TypeId.OBJECT);
 
@@ -129,7 +132,7 @@ public class FProxy
             // Class localClass;
             Local<Class> localClass = code.newLocal(helper.getType(Class.class));
             // String localMethodName;
-            Local<String> localMethodName = code.newLocal(helper.getType(String.class));
+            Local<String> localMethodName = code.newLocal(TypeId.STRING);
             // Class[] localArgsClass;
             Local<Class[]> localArgsClass = code.newLocal(helper.getType(Class[].class));
             // Object[] localArgsValue;
@@ -139,13 +142,15 @@ public class FProxy
             Local<Integer> localIntTmp = code.newLocal(TypeId.INT);
             // Class localClassTmp;
             Local<Class> localClassTmp = code.newLocal(helper.getType(Class.class));
+            Local localObjectTmp = code.newLocal(TypeId.OBJECT);
 
             // ---------- 变量赋值 ----------
             code.iget(fieldMethodInterceptor, localMethodInterceptor, localThis);
 
             MethodId methodGetClass = helper.getMethod(helper.getTypeSub(),
                     Class.class, "getClass");
-            code.invokeVirtual(methodGetClass, localClass, localThis);
+            code.invokeVirtual(methodGetClass, localClass,
+                    localThis);
 
             code.loadConstant(localMethodName, methodName);
 
@@ -166,10 +171,14 @@ public class FProxy
 
                     if (classArg.isPrimitive())
                     {
-                        TypeId packedClassType = TypeId.get(Const.getPackedType(argsClass[i]));
-                        methodId = packedClassType.getMethod(packedClassType, "valueOf", argsTypeId[i]);
-                        code.invokeStatic(methodId, tmpNumberLocal, code.getParameter(i, argsTypeId[i]));
-                        code.aput(argsValueLocal, intLocal, tmpNumberLocal);
+                        TypeId typePrimitive = helper.getType(classArg);
+                        MethodId methodValueOf = helper.getMethod(typePrimitive,
+                                classArg, "valueOf", classArg);
+
+                        code.invokeStatic(methodValueOf, localObjectTmp,
+                                helper.getParameter(code, i, classArg));
+
+                        code.aput(localArgsValue, localIntTmp, localObjectTmp);
                     } else
                     {
                         code.aput(localArgsValue, localIntTmp, helper.getParameter(code, i, classArg));
@@ -181,45 +190,34 @@ public class FProxy
                 code.loadConstant(localArgsValue, null);
             }
 
-
-            // FProxyHelper.notifyInterceptor(......);
             code.invokeStatic(methodNotifyInterceptor, localObjectReturn,
                     localMethodInterceptor, localClass, localMethodName, localArgsClass, localArgsValue, localThis);
 
-            localThis = code.getThis(typeSub);
-
-            if (paramCount > 0)
+            if (classReturn == Void.class)
             {
-//                code.loadConstant(localMethod, item);
-
-                TypeId<?>[] arrType = Utils.classToTypeId(item.getParameterTypes());
-                Object[] arrParam = new Object[paramCount];
-                for (int i = 0; i < paramCount; i++)
-                {
-                    arrParam[i] = code.getParameter(i, arrType[i]);
-                }
-                code.loadConstant(localArrParam, arrParam);
-
-                code.invokeVirtual(methodNotifyInterceptor, localInvokeResult, localThis,
-                        localThis, localMethod, localArrParam);
+                code.returnVoid();
             } else
-            {
-                code.invokeVirtual(methodNotifyInterceptor, localInvokeResult, localThis);
-            }
-
-            if (classReturn != Void.class)
             {
                 if (classReturn.isPrimitive())
                 {
+                    // here use one label, if use two, need jump once and mark twice
+                    Label ifBody = new Label();
+                    code.loadConstant(retPackLocal, null);
+                    code.compare(Comparison.EQ, ifBody, retObjLocal, retPackLocal);
 
+                    code.cast(retPackLocal, retObjLocal);
+                    methodId = TypeId.get(Const.getPackedType(retClass)).getMethod(methodReturnType, Const.getPrimitiveValueMethodName(retClass));
+                    code.invokeVirtual(methodId, retLocal, retPackLocal);
+                    code.returnValue(retLocal);
+
+                    code.mark(ifBody);
+                    code.loadConstant(retLocal, 0);
+                    code.returnValue(retLocal);
                 } else
                 {
-                    code.cast(localReturn, localInvokeResult);
-                    code.returnValue(localReturn);
+                    code.cast(retLocal, retObjLocal);
+                    code.returnValue(retLocal);
                 }
-            } else
-            {
-                code.returnVoid();
             }
         }
 
