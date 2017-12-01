@@ -121,7 +121,14 @@ public class DexMakerHelper
         TypeId typeId = mMapType.get(clazz);
         if (typeId == null)
         {
-            typeId = TypeId.get(clazz);
+            if (clazz == Void.class)
+            {
+                typeId = TypeId.VOID;
+            } else
+            {
+                typeId = TypeId.get(clazz);
+            }
+
             mMapType.put(clazz, typeId);
         }
         return typeId;
@@ -147,15 +154,7 @@ public class DexMakerHelper
 
     public <T, R> MethodId<T, R> getMethod(TypeId<T> typeTarget, Class<R> classReturn, String methodName, Class<?>... parameters)
     {
-        TypeId typeReturn = null;
-        if (classReturn == Void.class)
-        {
-            typeReturn = TypeId.VOID;
-        } else
-        {
-            typeReturn = getType(classReturn);
-        }
-
+        TypeId typeReturn = getType(classReturn);
         TypeId[] typeParameters = classToTypeId(parameters);
 
         if (typeParameters != null)
