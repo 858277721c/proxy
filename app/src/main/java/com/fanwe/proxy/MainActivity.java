@@ -1,7 +1,11 @@
 package com.fanwe.proxy;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+import com.fanwe.lib.proxy.FMethodInterceptor;
+import com.fanwe.lib.proxy.FMethodProxy;
+import com.fanwe.lib.proxy.FProxy;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -11,5 +15,23 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        try
+        {
+            FProxy proxy = new FProxy(this);
+            proxy.setSuperClass(Person.class);
+            proxy.newProxyInstance(new FMethodInterceptor()
+            {
+                @Override
+                public Object intercept(Object proxy, Object[] args, FMethodProxy methodProxy)
+                {
+                    return null;
+                }
+            });
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

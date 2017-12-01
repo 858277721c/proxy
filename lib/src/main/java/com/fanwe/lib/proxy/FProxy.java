@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.android.dx.Code;
 import com.android.dx.Comparison;
-import com.android.dx.DexMaker;
 import com.android.dx.FieldId;
 import com.android.dx.Label;
 import com.android.dx.Local;
@@ -25,8 +24,7 @@ public class FProxy
     public static final String DIR_NAME_DEX = "dexProxy";
 
     private Context mContext;
-    private Class mTargetClass;
-    private DexMaker mDexMaker;
+    private Class mSuperClass;
 
     public FProxy(Context context)
     {
@@ -36,32 +34,23 @@ public class FProxy
     /**
      * 设置要代理的class
      *
-     * @param targetClass
+     * @param superClass
      */
-    public void setTargetClass(Class targetClass)
+    public void setSuperClass(Class superClass)
     {
-        mTargetClass = targetClass;
+        mSuperClass = superClass;
     }
 
-    public Class getTargetClass()
+    public Class getSuperClass()
     {
-        return mTargetClass;
-    }
-
-    private DexMaker getDexMaker()
-    {
-        if (mDexMaker == null)
-        {
-            mDexMaker = new DexMaker();
-        }
-        return mDexMaker;
+        return mSuperClass;
     }
 
     public Object newProxyInstance(FMethodInterceptor methodInterceptor) throws Exception
     {
         final File dirDex = mContext.getExternalFilesDir(DIR_NAME_DEX);
 
-        final DexMakerHelper helper = new DexMakerHelper(mTargetClass);
+        final DexMakerHelper helper = new DexMakerHelper(mSuperClass);
 
         // public class com/fanwe/model/Person$FProxy$ extends com/fanwe/model/Person implements FProxyInterface
         helper.declareClass(Modifier.PUBLIC, FProxyInterface.class);
@@ -97,7 +86,7 @@ public class FProxy
                 helper.getParameter(code, 0, FMethodInterceptor.class));
         code.returnVoid();
 
-        final Method[] arrMethod = getTargetClass().getDeclaredMethods();
+        final Method[] arrMethod = getSuperClass().getDeclaredMethods();
 
         String methodName = null;
         Class<?> classReturn = null;
@@ -232,8 +221,8 @@ public class FProxy
             }
         }
 
-        ClassLoader loader = getDexMaker().generateAndLoad(getClass().getClassLoader(), dirDex);
-        Class<?> classSub = loader.loadClass(mTargetClass.getName() + FProxyInterface.PROXY_CLASS_SUFFIX);
+        ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), dirDex);
+        Class<?> classSub = loader.loadClass(mSuperClass.getName() + FProxyInterface.PROXY_CLASS_SUFFIX);
         Object instance = classSub.newInstance();
 
         return instance;
