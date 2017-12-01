@@ -84,14 +84,7 @@ public class DexMakerHelper
      */
     public Code declareConstructor(int flags, Class<?>... parameters)
     {
-        TypeId<?>[] arrType = classToTypeId(parameters);
-        if (arrType != null)
-        {
-            return getDexMaker().declare(getTypeSub().getConstructor(arrType), flags);
-        } else
-        {
-            return getDexMaker().declare(getTypeSub().getConstructor(), flags);
-        }
+        return getDexMaker().declare(getConstructor(getTypeSub(), parameters), flags);
     }
 
     /**
@@ -141,20 +134,30 @@ public class DexMakerHelper
         return field;
     }
 
+    public MethodId<?, Void> getConstructor(TypeId<?> typeTarget, Class<?>... parameters)
+    {
+        TypeId[] typeParameters = classToTypeId(parameters);
+        if (typeParameters != null)
+        {
+            return typeTarget.getConstructor(typeParameters);
+        } else
+        {
+            return typeTarget.getConstructor();
+        }
+    }
+
     public MethodId<?, ?> getMethod(TypeId<?> typeTarget, Class<?> classReturn, String methodName, Class<?>... parameters)
     {
         TypeId typeReturn = getType(classReturn);
         TypeId[] typeParameters = classToTypeId(parameters);
 
-        MethodId<?, ?> method = null;
         if (typeParameters != null)
         {
-            method = typeTarget.getMethod(typeReturn, methodName, typeParameters);
+            return typeTarget.getMethod(typeReturn, methodName, typeParameters);
         } else
         {
-            method = typeTarget.getMethod(typeReturn, methodName);
+            return typeTarget.getMethod(typeReturn, methodName);
         }
-        return method;
     }
 
     public Local getThis(Code code)
