@@ -171,10 +171,11 @@ public class FProxy
                 code.newArray(localArgsClass, localIntTmp);
                 code.newArray(localArgsValue, localIntTmp);
 
-                Class classArg = null;
+                Class<?> classArg = null;
                 for (int i = 0; i < classArgs.length; i++)
                 {
                     classArg = classArgs[i];
+
 
                     code.loadConstant(localIntTmp, i);
                     code.loadConstant(localClassTmp, classArg);
@@ -182,9 +183,11 @@ public class FProxy
 
                     if (classArg.isPrimitive())
                     {
-                        TypeId typePrimitivePack = helper.getType(DexMakerHelper.getPackedClass(classArg));
-                        MethodId methodValueOf = helper.getMethod(typePrimitivePack,
-                                DexMakerHelper.getPackedClass(classArg), "valueOf", classArg);
+                        Class<?> classArgPack = DexMakerHelper.getPackedClass(classArg);
+
+                        TypeId typeArgPack = helper.getType(classArgPack);
+                        MethodId methodValueOf = helper.getMethod(typeArgPack,
+                                classArgPack, "valueOf", classArg);
 
                         code.invokeStatic(methodValueOf, localObjectTmp,
                                 helper.getParameter(code, i, classArg));
