@@ -1,6 +1,9 @@
 package com.fanwe.lib.proxy;
 
-public class FProxyMethodExecuter
+/**
+ * 这个类的方法为代理对象调用的
+ */
+public class FProxyExecuter
 {
     /**
      * 通知方法拦截对象

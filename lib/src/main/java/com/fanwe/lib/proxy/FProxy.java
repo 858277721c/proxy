@@ -1,7 +1,7 @@
 package com.fanwe.lib.proxy;
 
 /**
- * Created by zhengjun on 2017/11/30.
+ * 代理要实现的接口
  */
 public interface FProxy
 {
@@ -18,5 +18,10 @@ public interface FProxy
      */
     String METHOD_NAME_SETMETHODINTERCEPTOR = "setMethodInterceptor" + PROXY_CLASS_SUFFIX;
 
+    /**
+     * 设置方法拦截对象
+     *
+     * @param interceptor
+     */
     void setMethodInterceptor$FProxy$(FMethodInterceptor interceptor);
 }

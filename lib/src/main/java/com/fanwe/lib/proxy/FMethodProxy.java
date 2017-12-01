@@ -3,7 +3,7 @@ package com.fanwe.lib.proxy;
 import java.lang.reflect.Method;
 
 /**
- * Created by Administrator on 2017/12/1.
+ * 方法代理
  */
 public class FMethodProxy
 {

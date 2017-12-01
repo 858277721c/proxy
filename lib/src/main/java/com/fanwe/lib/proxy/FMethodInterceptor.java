@@ -1,10 +1,17 @@
 package com.fanwe.lib.proxy;
 
 /**
- * Created by Administrator on 2017/12/1.
+ * 方法拦截接口
  */
-
 public interface FMethodInterceptor
 {
+    /**
+     * 方法拦截回调
+     *
+     * @param proxy       代理对象
+     * @param args        方法参数值数组
+     * @param methodProxy 方法代理
+     * @return
+     */
     Object intercept(Object proxy, Object[] args, FMethodProxy methodProxy);
 }
