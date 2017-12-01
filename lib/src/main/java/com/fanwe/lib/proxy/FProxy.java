@@ -202,7 +202,7 @@ public class FProxy
             }
 
             // 调用拦截对象
-            code.invokeStatic(methodNotifyInterceptor, localObjectReturn,
+            code.invokeStatic(methodNotifyInterceptor, classReturn == Void.class ? null : localObjectReturn,
                     localMethodInterceptor, localClass, localMethodName, localArgsClass, localArgsValue, localThis);
 
             if (classReturn == Void.class)
