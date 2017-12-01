@@ -201,6 +201,7 @@ public class FProxy
                 code.loadConstant(localArgsValue, null);
             }
 
+            // 调用拦截对象
             code.invokeStatic(methodNotifyInterceptor, localObjectReturn,
                     localMethodInterceptor, localClass, localMethodName, localArgsClass, localArgsValue, localThis);
 
