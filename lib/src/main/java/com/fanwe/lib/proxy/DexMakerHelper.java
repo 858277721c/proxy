@@ -165,6 +165,12 @@ public class DexMakerHelper
         return code.getThis(getTypeSub());
     }
 
+    public <T> Local<T> getParameter(Code code, int index, Class<T> clazz)
+    {
+        TypeId type = getType(clazz);
+        return code.getParameter(index, type);
+    }
+
     public TypeId<?>[] classToTypeId(Class<?>[] arrClass)
     {
         if (arrClass == null || arrClass.length <= 0)

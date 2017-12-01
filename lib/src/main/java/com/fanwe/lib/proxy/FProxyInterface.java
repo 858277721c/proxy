@@ -18,6 +18,9 @@ public interface FProxyInterface
      */
     String METHOD_NAME_SETMETHODINTERCEPTOR = "setMethodInterceptor" + PROXY_CLASS_SUFFIX;
 
+    String FIELD_NAME_METHODINTERCEPTOR = "mMethodInterceptor";
+
+
     /**
      * 设置方法拦截对象
      *

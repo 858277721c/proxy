@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.dx.Code;
 import com.android.dx.DexMaker;
+import com.android.dx.FieldId;
 import com.android.dx.Local;
 import com.android.dx.MethodId;
 import com.android.dx.TypeId;
@@ -76,20 +77,23 @@ public class FProxy
 
         // private FMethodInterceptor mMethodInterceptor = null;
         helper.declareField(Modifier.PRIVATE,
-                FMethodInterceptor.class, "mMethodInterceptor",
-                null);
+                FMethodInterceptor.class, FProxyInterface.FIELD_NAME_METHODINTERCEPTOR, null);
         /**
-         * public void setInvocationHandler$SDProxy$(InvocationHandler handler)
+         * public setMethodInterceptor$FProxy$(FMethodInterceptor interceptor)
          * {
-         *     mInvocationHandler = handler;
+         *     mMethodInterceptor = handler;
          * }
          */
-
         code = helper.declareMethod(Modifier.PUBLIC,
                 Void.class, FProxyInterface.METHOD_NAME_SETMETHODINTERCEPTOR,
                 FMethodInterceptor.class);
 
-        code.iput(fieldMethodInterceptor, localThis, code.getParameter(0, typeMethodInterceptor));
+        FieldId fieldMethodInterceptor = helper.getField(helper.getTypeSub(),
+                FMethodInterceptor.class, FProxyInterface.FIELD_NAME_METHODINTERCEPTOR);
+
+        code.iput(fieldMethodInterceptor,
+                helper.getThis(code),
+                helper.getParameter(code, 0, FMethodInterceptor.class));
         code.returnVoid();
 
         final Method[] arrMethod = getTargetClass().getDeclaredMethods();
