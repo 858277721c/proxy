@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 public class DexMakerHelper
 {
-    private HashMap<Class, TypeId> mMapClassType = new HashMap<>();
+    private HashMap<Class, TypeId> mMapType = new HashMap<>();
 
     private DexMaker mDexMaker;
     private Class<?> mSuperClass;
@@ -118,11 +118,11 @@ public class DexMakerHelper
 
     public <T> TypeId<T> getType(Class<T> clazz)
     {
-        TypeId typeId = mMapClassType.get(clazz);
+        TypeId typeId = mMapType.get(clazz);
         if (typeId == null)
         {
             typeId = TypeId.get(clazz);
-            mMapClassType.put(clazz, typeId);
+            mMapType.put(clazz, typeId);
         }
         return typeId;
     }
