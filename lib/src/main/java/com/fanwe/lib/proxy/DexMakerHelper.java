@@ -123,7 +123,7 @@ public class DexMakerHelper
         return getDexMaker().declare(method, flags);
     }
 
-    public TypeId<?> getType(Class<?> clazz)
+    public <T> TypeId<T> getType(Class<T> clazz)
     {
         TypeId typeId = mMapClassType.get(clazz);
         if (typeId == null)
