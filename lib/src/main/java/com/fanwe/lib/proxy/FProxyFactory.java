@@ -84,7 +84,7 @@ public class FProxyFactory
             {
                 throw new FProxyException("clazz must not be final");
             }
-            Constructor constructor = clazz.getConstructor();
+            Constructor constructor = clazz.getDeclaredConstructor();
             if (constructor == null)
             {
                 throw new FProxyException("clazz must provide a none parameter constructor");
@@ -92,7 +92,7 @@ public class FProxyFactory
             modifiers = constructor.getModifiers();
             if (Modifier.isPrivate(modifiers))
             {
-                throw new FProxyException("clazz none parameter constructor can not be private");
+                throw new FProxyException("clazz none parameter constructor must not be private");
             }
 
             DexMakerHelper helper = new DexMakerHelper(clazz);
