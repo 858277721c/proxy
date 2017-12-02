@@ -69,9 +69,10 @@ class DexMakerHelper
      * 声明类
      *
      * @param flags      权限
-     * @param interfaces 要实现的接口
+     * @param classSuper 父类的class
+     * @param interfaces 要实现接口的class
      */
-    public void declareClass(int flags, Class<?>... interfaces)
+    public void declareClass(int flags, Class<?> classSuper, Class<?>... interfaces)
     {
         TypeId[] arrType = classToTypeId(interfaces);
         if (arrType != null)
@@ -79,14 +80,14 @@ class DexMakerHelper
             getDexMaker().declare(getTypeProxy(),
                     getTypeProxy().getName(),
                     flags,
-                    getTypeSuper(),
+                    getType(classSuper),
                     arrType);
         } else
         {
             getDexMaker().declare(getTypeProxy(),
                     getTypeProxy().getName(),
                     flags,
-                    getTypeSuper());
+                    getType(classSuper));
         }
     }
 
