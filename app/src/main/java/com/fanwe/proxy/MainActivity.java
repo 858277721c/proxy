@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = MainActivity.class.getSimpleName();
 
     private FProxyFactory mProxyFactory;
+    private Person mPerson = new Person();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity
         try
         {
             mProxyFactory = new FProxyFactory(this); // 创建代理工厂
-            Person person = mProxyFactory.newProxy(Person.class, new FMethodInterceptor() // 创建代理对象
+            Person proxy = mProxyFactory.newProxy(Person.class, new FMethodInterceptor() // 创建代理对象
             {
                 @Override
                 public Object intercept(FInterceptInfo info, Object[] args)
@@ -44,9 +45,9 @@ public class MainActivity extends AppCompatActivity
             });
 
             // ---------- 测试调用代理的方法 ----------
-            person.getUp();
-            float money = person.eatFood("banana", 1, 1.5f);
-            Person.Book book = person.readBooks(Person.Book.Chinese);
+            proxy.getUp();
+            float money = proxy.eatFood("banana", 1, 1.5f);
+            Person.Book book = proxy.readBooks(Person.Book.Chinese);
             Log.i(TAG, String.valueOf(money) + "," + book);
         } catch (Exception e)
         {
