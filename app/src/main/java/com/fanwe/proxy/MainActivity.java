@@ -45,12 +45,11 @@ public class MainActivity extends AppCompatActivity
 
             // ---------- 测试调用代理的方法 ----------
             person.getUp();
-            float money = person.eat("banana", 1, 1.5f);
-            boolean bReadBook = person.readBook("good book");
-            Person.Language language = person.learnLanguage(Person.Language.Chinese);
+            float money = person.eatFood("banana", 1, 1.5f);
+            Person.Book book = person.readBooks(Person.Book.Chinese);
             Long time = person.sleepAt(System.currentTimeMillis());
 
-            Log.i(TAG, String.valueOf(money) + "," + bReadBook + "," + language + "," + time);
+            Log.i(TAG, String.valueOf(money) + "," + book + "," + time);
         } catch (Exception e)
         {
             e.printStackTrace();
