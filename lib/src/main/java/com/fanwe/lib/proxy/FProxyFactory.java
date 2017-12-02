@@ -10,6 +10,7 @@ import com.android.dx.Local;
 import com.android.dx.MethodId;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -58,6 +59,24 @@ public class FProxyFactory
      */
     public final <T> T newProxy(Class<T> clazz, final FMethodInterceptor methodInterceptor) throws Exception
     {
+        return newProxy(clazz, null, null, methodInterceptor);
+    }
+
+    /**
+     * 创建一个代理对象
+     *
+     * @param clazz             要创建代理的class
+     * @param argsClass         要调用的构造方法参数class
+     * @param args              要调用的构造方法参数
+     * @param methodInterceptor 方法拦截回调对象
+     * @param <T>               要创建代理的class类型
+     * @return
+     * @throws Exception
+     */
+    public final <T> T newProxy(Class<T> clazz,
+                                Class[] argsClass, Object[] args,
+                                final FMethodInterceptor methodInterceptor) throws Exception
+    {
         if (methodInterceptor == null)
         {
             throw new FProxyException("methodInterceptor must not be null");
@@ -88,9 +107,11 @@ public class FProxyFactory
             makeProxyClass(helper);
 
             ClassLoader loader = helper.getDexMaker().generateAndLoad(clazz.getClassLoader(), getDexDir());
-            Class<?> classProxy = loader.loadClass(helper.getProxyClassName());
+            Class classProxy = loader.loadClass(helper.getProxyClassName());
 
-            FProxyInterface proxy = (FProxyInterface) classProxy.newInstance();
+            Constructor constructor = classProxy.getDeclaredConstructor(argsClass);
+            FProxyInterface proxy = (FProxyInterface) constructor.newInstance(args);
+
             proxy.setMethodInterceptor$FProxy$(methodInterceptor);
             return (T) proxy;
         }
