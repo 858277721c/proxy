@@ -147,7 +147,7 @@ public class FProxyFactory
 
             Local<Integer> localIntTmp = helper.newLocal(code, int.class);
             Local<Class> localClassTmp = helper.newLocal(code, Class.class);
-            Local localObjectTmp = helper.newLocal(code, Object.class);
+            Local<Object> localObjectTmp = helper.newLocal(code, Object.class);
 
             // ---------- 变量赋值 ----------
             code.loadConstant(localMethodName, methodName);
