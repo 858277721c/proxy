@@ -10,15 +10,13 @@ public class FProxyHelper
     /**
      * 通知方法拦截对象
      *
-     * @param interceptor
-     * @param methodName  方法名称
-     * @param argsClass   参数class
-     * @param argsValue   参数值
-     * @param proxy       代理对象
+     * @param methodName 方法名称
+     * @param argsClass  参数class
+     * @param argsValue  参数值
+     * @param proxy      代理对象
      * @return 返回拦截对象的返回值
      */
-    public static Object notifyInterceptor(FMethodInterceptor interceptor,
-                                           String methodName, Class[] argsClass, Object[] argsValue,
+    public static Object notifyInterceptor(String methodName, Class[] argsClass, Object[] argsValue,
                                            Object proxy)
     {
         FProxyInterface proxyInterface = (FProxyInterface) proxy;

@@ -113,7 +113,7 @@ public class FProxyFactory
 
         MethodId<?, ?> methodNotifyInterceptor = helper.getMethod(FProxyHelper.class,
                 Object.class, FProxyHelper.METHOD_NAME_NOTIFYINTERCEPTOR,
-                FMethodInterceptor.class, String.class, Class[].class, Object[].class, Object.class);
+                String.class, Class[].class, Object[].class, Object.class);
 
         for (Method item : arrMethod)
         {
@@ -142,8 +142,6 @@ public class FProxyFactory
             // Object localReturnObject;
             Local<Object> localReturnObject = helper.newLocal(code, Object.class);
 
-            // FMethodInterceptor localMethodInterceptor;
-            localMethodInterceptor = helper.newLocal(code, FMethodInterceptor.class);
             // String localMethodName;
             Local<String> localMethodName = helper.newLocal(code, String.class);
             // Class[] localArgsClass;
@@ -201,7 +199,7 @@ public class FProxyFactory
 
             // 调用拦截对象
             code.invokeStatic(methodNotifyInterceptor, isReturnVoid ? null : localReturnObject,
-                    localMethodInterceptor, localMethodName, localArgsClass, localArgsValue, helper.getThis(code));
+                    localMethodName, localArgsClass, localArgsValue, helper.getThis(code));
 
             if (isReturnVoid)
             {
