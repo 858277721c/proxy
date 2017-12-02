@@ -79,7 +79,7 @@ public class FProxyFactory
                 Void.class, FProxyInterface.METHOD_NAME_SETMETHODINTERCEPTOR,
                 FMethodInterceptor.class);
 
-        FieldId fieldMethodInterceptor = helper.getField(helper.getSubClass(),
+        FieldId fieldMethodInterceptor = helper.getField(helper.getProxyClass(),
                 FMethodInterceptor.class, FProxyInterface.FIELD_NAME_METHODINTERCEPTOR);
 
         code.iput(fieldMethodInterceptor,

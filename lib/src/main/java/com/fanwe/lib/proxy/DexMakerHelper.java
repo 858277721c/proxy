@@ -36,9 +36,9 @@ class DexMakerHelper
         return mSuperClass;
     }
 
-    public Class<?> getSubClass()
+    public Class<?> getProxyClass()
     {
-        return FSub.class;
+        return FProxyClass.class;
     }
 
     public String getProxyClassName()
@@ -99,7 +99,7 @@ class DexMakerHelper
      */
     public Code declareConstructor(int flags, Class<?>... parameters)
     {
-        MethodId method = getConstructor(getSubClass(), parameters);
+        MethodId method = getConstructor(getProxyClass(), parameters);
         return getDexMaker().declare(method, flags);
     }
 
@@ -113,7 +113,7 @@ class DexMakerHelper
      */
     public void declareField(int flags, Class<?> classField, String fieldName, Object fieldValue)
     {
-        FieldId field = getField(getSubClass(), classField, fieldName);
+        FieldId field = getField(getProxyClass(), classField, fieldName);
         getDexMaker().declare(field, flags, fieldValue);
     }
 
@@ -128,7 +128,7 @@ class DexMakerHelper
      */
     public Code declareMethod(int flags, Class<?> classReturn, String methodName, Class<?>... parameters)
     {
-        MethodId method = getMethod(getSubClass(), classReturn, methodName, parameters);
+        MethodId method = getMethod(getProxyClass(), classReturn, methodName, parameters);
         return getDexMaker().declare(method, flags);
     }
 
@@ -137,7 +137,7 @@ class DexMakerHelper
         TypeId typeId = mMapType.get(clazz);
         if (typeId == null)
         {
-            if (clazz == FSub.class)
+            if (clazz == FProxyClass.class)
             {
                 typeId = getTypeProxy();
             } else if (clazz == Void.class)
@@ -323,7 +323,7 @@ class DexMakerHelper
      * 由于创建代理的时候无法获得代理对象的class<br>
      * 所以当传入的对象class为这个类的class的时候会被当做代理对象的class
      */
-    private class FSub
+    private class FProxyClass
     {
     }
 }
