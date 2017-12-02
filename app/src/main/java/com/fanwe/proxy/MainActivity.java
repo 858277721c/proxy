@@ -30,8 +30,14 @@ public class MainActivity extends AppCompatActivity
                     return null;
                 }
             });
-            Object result = person.eat("apple", 100, 1.1f);
-            Log.i(TAG, String.valueOf(result));
+
+            person.getUp();
+            float money = person.eat("apple", 100, 1.1f);
+            boolean bReadBook = person.readBook("person");
+            Person.Language language = person.learnLanguage(Person.Language.Chinese);
+            Long time = person.sleepAt(System.currentTimeMillis());
+
+            Log.i(TAG, String.valueOf(money) + "," + bReadBook + "," + language + "," + time);
         } catch (Exception e)
         {
             e.printStackTrace();

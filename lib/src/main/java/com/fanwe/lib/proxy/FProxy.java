@@ -104,6 +104,7 @@ public class FProxy
         String methodNameSuper = null;
         Class<?> classReturn = null;
         Class<?> classReturnPack = null;
+        boolean isReturnVoid = false;
         Class<?>[] classArgs = null;
 
         MethodId<?, ?> methodNotifyInterceptor = helper.getMethod(FProxyHelper.class,
@@ -118,6 +119,7 @@ public class FProxy
                 continue;
             }
             classReturn = item.getReturnType();
+            isReturnVoid = classReturn.getSimpleName().equals("void");
             classArgs = item.getParameterTypes();
 
             code = helper.declareMethod(item.getModifiers(), classReturn, methodName, classArgs); // 生成方法体
@@ -203,10 +205,10 @@ public class FProxy
             }
 
             // 调用拦截对象
-            code.invokeStatic(methodNotifyInterceptor, classReturn == Void.class ? null : localObjectReturn,
+            code.invokeStatic(methodNotifyInterceptor, isReturnVoid ? null : localObjectReturn,
                     localMethodInterceptor, localClass, localMethodName, localArgsClass, localArgsValue, localThis);
 
-            if (classReturn == Void.class)
+            if (isReturnVoid)
             {
                 code.returnVoid();
             } else
@@ -243,7 +245,7 @@ public class FProxy
 //            Local[] localSuperArgsValue = null;
 //            localThis = helper.getThis(code);
 //
-//            MethodId methodSuper = helper.getMethod(helper.getTypeSuper(), classReturn, methodName);
+//            MethodId methodSuper = helper.getMethod(mSuperClass, classReturn, methodName);
 //            if (classArgs.length > 0)
 //            {
 //                localSuperArgsValue = new Local[classArgs.length];
@@ -252,14 +254,14 @@ public class FProxy
 //                    localSuperArgsValue[i] = helper.getParameter(code, i, classArgs[i]);
 //                }
 //
-//                code.invokeSuper(methodSuper, classReturn == Void.class ? null : localReturn, localThis,
+//                code.invokeSuper(methodSuper, isReturnVoid ? null : localReturn, localThis,
 //                        localSuperArgsValue);
 //            } else
 //            {
-//                code.invokeSuper(methodSuper, classReturn == Void.class ? null : localReturn, localThis);
+//                code.invokeSuper(methodSuper, isReturnVoid ? null : localReturn, localThis);
 //            }
 //
-//            if (classReturn == Void.class)
+//            if (isReturnVoid)
 //            {
 //                code.returnVoid();
 //            } else
