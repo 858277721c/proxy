@@ -63,7 +63,7 @@ public class DexMakerHelper
      */
     public void declareClass(int flags, Class<?>... interfaces)
     {
-        TypeId<?>[] arrType = classToTypeId(interfaces);
+        TypeId[] arrType = classToTypeId(interfaces);
         if (arrType != null)
         {
             getDexMaker().declare(getTypeSub(),
@@ -164,8 +164,7 @@ public class DexMakerHelper
         TypeId typeTarget = getType(classTarget);
         TypeId typeField = getType(classField);
 
-        FieldId<T, F> field = typeTarget.getField(typeField, fieldName);
-        return field;
+        return typeTarget.getField(typeField, fieldName);
     }
 
     /**
@@ -178,7 +177,7 @@ public class DexMakerHelper
      */
     public <T> MethodId<T, Void> getConstructor(Class<T> classTarget, Class<?>... parameters)
     {
-        TypeId<T> typeTarget = getType(classTarget);
+        TypeId typeTarget = getType(classTarget);
         TypeId[] typeParameters = classToTypeId(parameters);
 
         if (typeParameters != null)
@@ -224,8 +223,14 @@ public class DexMakerHelper
 
     public <T> Local<T> getParameter(Code code, int index, Class<T> clazz)
     {
-        TypeId<T> type = getType(clazz);
+        TypeId type = getType(clazz);
         return code.getParameter(index, type);
+    }
+
+    public <T> Local<T> newLocal(Code code, Class<T> clazz)
+    {
+        TypeId type = getType(clazz);
+        return code.newLocal(type);
     }
 
     public TypeId<?>[] classToTypeId(Class<?>[] arrClass)
