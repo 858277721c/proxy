@@ -187,7 +187,8 @@ public class FProxyFactory
             }
 
             // 调用拦截对象
-            code.invokeStatic(methodNotifyInterceptor, isReturnVoid ? null : localReturnObject,
+            code.invokeStatic(methodNotifyInterceptor,
+                    isReturnVoid ? null : localReturnObject,
                     localMethodName, localArgsClass, localArgsValue, helper.getThis(code));
 
             if (isReturnVoid)
