@@ -137,7 +137,7 @@ public class FProxyFactory
                 localReturnPack = helper.newLocal(code, DexMakerHelper.getPackedClass(classReturn));
             }
 
-            Local<Object> localReturnObject = helper.newLocal(code, Object.class);
+            Local<Object> localReturnInterceptor = helper.newLocal(code, Object.class);
 
             Local<String> localMethodName = helper.newLocal(code, String.class);
             Local<Class[]> localArgsClass = helper.newLocal(code, Class[].class);
@@ -186,7 +186,7 @@ public class FProxyFactory
 
             // 调用拦截对象
             code.invokeStatic(methodNotifyInterceptor,
-                    isReturnVoid ? null : localReturnObject,
+                    isReturnVoid ? null : localReturnInterceptor,
                     localMethodName, localArgsClass, localArgsValue, helper.getThis(code));
 
             if (isReturnVoid)
@@ -198,9 +198,9 @@ public class FProxyFactory
                 {
                     Label ifNull = new Label();
                     code.loadConstant(localReturnPack, null);
-                    code.compare(Comparison.EQ, ifNull, localReturnObject, localReturnPack);
+                    code.compare(Comparison.EQ, ifNull, localReturnInterceptor, localReturnPack);
 
-                    code.cast(localReturnPack, localReturnObject);
+                    code.cast(localReturnPack, localReturnInterceptor);
                     MethodId methodPrimitiveValue = helper.getMethodPrimitiveValue(classReturn);
                     code.invokeVirtual(methodPrimitiveValue, localReturn, localReturnPack);
                     code.returnValue(localReturn);
@@ -210,7 +210,7 @@ public class FProxyFactory
                     code.returnValue(localReturn);
                 } else
                 {
-                    code.cast(localReturn, localReturnObject);
+                    code.cast(localReturn, localReturnInterceptor);
                     code.returnValue(localReturn);
                 }
             }
