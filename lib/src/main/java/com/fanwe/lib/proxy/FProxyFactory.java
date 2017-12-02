@@ -76,7 +76,7 @@ public class FProxyFactory
     {
         if (helper.getSuperClass().isInterface())
         {
-
+            helper.declareClass(Modifier.PUBLIC, Object.class, helper.getSuperClass(), FProxyInterface.class);
         } else
         {
             // public class com/fanwe/model/Person$FProxy$ extends com/fanwe/model/Person implements FProxyInterface
