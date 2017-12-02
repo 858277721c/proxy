@@ -20,20 +20,20 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mProxyFactory = new FProxyFactory(this);
-
         try
         {
-            Person person = mProxyFactory.newProxy(Person.class, new FMethodInterceptor()
+            mProxyFactory = new FProxyFactory(this); // 创建代理工厂
+            Person person = mProxyFactory.newProxy(Person.class, new FMethodInterceptor() // 创建代理对象
             {
                 @Override
                 public Object intercept(FInterceptInfo info, Object[] args)
                 {
                     try
                     {
-                        Log.i(TAG, "before method---------->" + info.getMethod().getName());
-                        Object result = info.invokeSuper(args);
-                        Log.e(TAG, "after method");
+                        // 拦截到代理方法被执行
+                        String methodName = info.getMethod().getName(); // 被拦截的方法名称
+                        Log.i(TAG, "intercept method---------->" + methodName);
+                        Object result = info.invokeSuper(args); //调用代理对象父类的方法
                         return result;
                     } catch (Exception e)
                     {
@@ -43,9 +43,10 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
+            // ---------- 测试调用代理的方法 ----------
             person.getUp();
-            float money = person.eat("apple", 100, 1.1f);
-            boolean bReadBook = person.readBook("person");
+            float money = person.eat("banana", 1, 1.5f);
+            boolean bReadBook = person.readBook("good book");
             Person.Language language = person.learnLanguage(Person.Language.Chinese);
             Long time = person.sleepAt(System.currentTimeMillis());
 
@@ -60,6 +61,6 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy()
     {
         super.onDestroy();
-        mProxyFactory.clearDexFiles();
+        mProxyFactory.clearDexFiles(); // 清空所有保存本地的代理class
     }
 }
