@@ -10,8 +10,10 @@ import com.android.dx.Local;
 import com.android.dx.MethodId;
 
 import java.io.File;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 
 /**
  * 代理工厂
@@ -54,34 +56,43 @@ public class FProxyFactory
      * @return
      * @throws Exception
      */
-    public final <T> T newProxy(Class<T> clazz, FMethodInterceptor methodInterceptor) throws Exception
+    public final <T> T newProxy(Class<T> clazz, final FMethodInterceptor methodInterceptor) throws Exception
     {
         if (methodInterceptor == null)
         {
             throw new IllegalArgumentException("methodInterceptor must not be null");
         }
 
-        DexMakerHelper helper = new DexMakerHelper(clazz);
-        makeProxyClass(helper);
+        if (clazz.isInterface())
+        {
+            Object proxy = Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, new InvocationHandler()
+            {
+                @Override
+                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+                {
+                    FInterceptInfo info = new FInterceptInfo(proxy, method.getName(), method.getParameterTypes());
+                    return methodInterceptor.intercept(info, args);
+                }
+            });
+            return (T) proxy;
+        } else
+        {
+            DexMakerHelper helper = new DexMakerHelper(clazz);
+            makeProxyClass(helper);
 
-        ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), getDexDir());
-        Class<?> classProxy = loader.loadClass(helper.getProxyClassName());
+            ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), getDexDir());
+            Class<?> classProxy = loader.loadClass(helper.getProxyClassName());
 
-        FProxyInterface proxy = (FProxyInterface) classProxy.newInstance();
-        proxy.setMethodInterceptor$FProxy$(methodInterceptor);
-        return (T) proxy;
+            FProxyInterface proxy = (FProxyInterface) classProxy.newInstance();
+            proxy.setMethodInterceptor$FProxy$(methodInterceptor);
+            return (T) proxy;
+        }
     }
 
     private void makeProxyClass(DexMakerHelper helper)
     {
-        if (helper.getSuperClass().isInterface())
-        {
-            helper.declareClass(Modifier.PUBLIC, Object.class, helper.getSuperClass(), FProxyInterface.class);
-        } else
-        {
-            // public class com/fanwe/model/Person$FProxy$ extends com/fanwe/model/Person implements FProxyInterface
-            helper.declareClass(Modifier.PUBLIC, helper.getSuperClass(), FProxyInterface.class);
-        }
+        // public class com/fanwe/model/Person$FProxy$ extends com/fanwe/model/Person implements FProxyInterface
+        helper.declareClass(Modifier.PUBLIC, helper.getSuperClass(), FProxyInterface.class);
 
         // ---------- 构造方法start ----------
         /**
