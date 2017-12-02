@@ -23,6 +23,11 @@ public class FInterceptInfo
         mArgsClass = argsClass;
     }
 
+    void setMethod(Method method)
+    {
+        mMethod = method;
+    }
+
     /**
      * 返回代理
      *

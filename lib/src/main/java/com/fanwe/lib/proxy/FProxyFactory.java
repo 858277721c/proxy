@@ -71,6 +71,7 @@ public class FProxyFactory
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
                 {
                     FInterceptInfo info = new FInterceptInfo(proxy, method.getName(), method.getParameterTypes());
+                    info.setMethod(method);
                     return methodInterceptor.intercept(info, args);
                 }
             });
