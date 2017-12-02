@@ -137,24 +137,24 @@ public class FProxy
             }
 
             // Object localObjectReturn;
-            Local<Object> localObjectReturn = code.newLocal(TypeId.OBJECT);
+            Local<Object> localObjectReturn = code.newLocal(helper.getType(Object.class));
 
             // FMethodInterceptor localMethodInterceptor;
             Local<FMethodInterceptor> localMethodInterceptor = code.newLocal(helper.getType(FMethodInterceptor.class));
             // Class localClass;
             Local<Class> localClass = code.newLocal(helper.getType(Class.class));
             // String localMethodName;
-            Local<String> localMethodName = code.newLocal(TypeId.STRING);
+            Local<String> localMethodName = code.newLocal(helper.getType(String.class));
             // Class[] localArgsClass;
             Local<Class[]> localArgsClass = code.newLocal(helper.getType(Class[].class));
             // Object[] localArgsValue;
             Local<Object[]> localArgsValue = code.newLocal(helper.getType(Object[].class));
 
             // Int localIntTmp;
-            Local<Integer> localIntTmp = code.newLocal(TypeId.INT);
+            Local<Integer> localIntTmp = code.newLocal(helper.getType(int.class));
             // Class localClassTmp;
             Local<Class> localClassTmp = code.newLocal(helper.getType(Class.class));
-            Local localObjectTmp = code.newLocal(TypeId.OBJECT);
+            Local localObjectTmp = code.newLocal(helper.getType(Object.class));
 
             // ---------- 变量赋值 ----------
             code.iget(fieldMethodInterceptor, localMethodInterceptor, localThis);
