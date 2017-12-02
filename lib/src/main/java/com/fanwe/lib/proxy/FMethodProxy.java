@@ -23,7 +23,7 @@ public class FMethodProxy
      *
      * @return
      */
-    public Method getSuperMethod()
+    private Method getSuperMethod()
     {
         Method method = null;
         try
@@ -37,7 +37,7 @@ public class FMethodProxy
     }
 
     /**
-     * 返回可以调用当前当前类方法的Method
+     * 返回当前拦截到的方法
      *
      * @return
      */
@@ -52,5 +52,18 @@ public class FMethodProxy
             e.printStackTrace();
         }
         return method;
+    }
+
+    /**
+     * 调用代理的父类方法
+     *
+     * @param proxy
+     * @param args
+     * @return
+     * @throws Exception
+     */
+    public Object invokeSuper(Object proxy, Object[] args) throws Exception
+    {
+        return getSuperMethod().invoke(proxy, args);
     }
 }

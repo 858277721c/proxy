@@ -28,7 +28,9 @@ public class MainActivity extends AppCompatActivity
                 {
                     try
                     {
-                        Object result = methodProxy.getSuperMethod().invoke(proxy, args);
+                        Log.i(TAG, "before method---------->" + methodProxy.getMethod().getName());
+                        Object result = methodProxy.invokeSuper(proxy, args);
+                        Log.e(TAG, "after method");
                         return result;
                     } catch (Exception e)
                     {
