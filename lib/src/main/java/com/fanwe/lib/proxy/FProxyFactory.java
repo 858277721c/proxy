@@ -220,20 +220,20 @@ public class FProxyFactory
             code = helper.declareMethod(item.getModifiers(), classReturn, methodNameSuper, classArgs);
 
             localReturn = helper.newLocal(code, classReturn);
-            Local[] localSuperArgsValue = null;
+            Local[] localArgsValueSuper = null;
 
             MethodId methodSuper = helper.getMethod(helper.getSuperClass(), classReturn, methodName, classArgs);
 
             if (classArgs.length > 0)
             {
-                localSuperArgsValue = new Local[classArgs.length];
+                localArgsValueSuper = new Local[classArgs.length];
                 for (int i = 0; i < classArgs.length; i++)
                 {
-                    localSuperArgsValue[i] = helper.getParameter(code, i, classArgs[i]);
+                    localArgsValueSuper[i] = helper.getParameter(code, i, classArgs[i]);
                 }
 
                 code.invokeSuper(methodSuper, isReturnVoid ? null : localReturn, helper.getThis(code),
-                        localSuperArgsValue);
+                        localArgsValueSuper);
             } else
             {
                 code.invokeSuper(methodSuper, isReturnVoid ? null : localReturn, helper.getThis(code));
