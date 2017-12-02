@@ -22,25 +22,35 @@ public class FMethodProxy
      * 返回可以调用父类方法的Method
      *
      * @return
-     * @throws NoSuchMethodException
      */
-    public Method getSuperMethod() throws NoSuchMethodException
+    public Method getSuperMethod()
     {
-        Method method = mProxyClass.getDeclaredMethod(mMethodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX,
-                mArgsClass);
+        Method method = null;
+        try
+        {
+            method = mProxyClass.getDeclaredMethod(mMethodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX, mArgsClass);
+        } catch (NoSuchMethodException e)
+        {
+            e.printStackTrace();
+        }
         return method;
     }
 
     /**
-     * 返回可以调用当前当前累方法的Method
+     * 返回可以调用当前当前类方法的Method
      *
      * @return
-     * @throws NoSuchMethodException
      */
-    public Method getMethod() throws NoSuchMethodException
+    public Method getMethod()
     {
-        Method method = mProxyClass.getDeclaredMethod(mMethodName,
-                mArgsClass);
+        Method method = null;
+        try
+        {
+            method = mProxyClass.getDeclaredMethod(mMethodName, mArgsClass);
+        } catch (NoSuchMethodException e)
+        {
+            e.printStackTrace();
+        }
         return method;
     }
 }

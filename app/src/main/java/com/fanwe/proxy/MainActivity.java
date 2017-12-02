@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity
                 {
                     try
                     {
-                        return methodProxy.getSuperMethod().invoke(proxy, args);
+                        Object result = methodProxy.getSuperMethod().invoke(proxy, args);
+                        return result;
                     } catch (Exception e)
                     {
                         e.printStackTrace();
