@@ -139,19 +139,13 @@ public class FProxyFactory
                 localReturnPack = helper.newLocal(code, classReturnPack);
             }
 
-            // Object localReturnObject;
             Local<Object> localReturnObject = helper.newLocal(code, Object.class);
 
-            // String localMethodName;
             Local<String> localMethodName = helper.newLocal(code, String.class);
-            // Class[] localArgsClass;
             Local<Class[]> localArgsClass = helper.newLocal(code, Class[].class);
-            // Object[] localArgsValue;
             Local<Object[]> localArgsValue = helper.newLocal(code, Object[].class);
 
-            // Int localIntTmp;
             Local<Integer> localIntTmp = helper.newLocal(code, int.class);
-            // Class localClassTmp;
             Local<Class> localClassTmp = helper.newLocal(code, Class.class);
             Local localObjectTmp = helper.newLocal(code, Object.class);
 
