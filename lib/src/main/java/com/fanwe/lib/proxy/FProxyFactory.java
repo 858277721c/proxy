@@ -92,7 +92,7 @@ public class FProxyFactory
 
         MethodId<?, ?> methodNotifyInterceptor = helper.getMethod(FProxyHelper.class,
                 Object.class, FProxyHelper.METHOD_NAME_NOTIFYINTERCEPTOR,
-                FMethodInterceptor.class, Class.class, String.class, Class[].class, Object[].class, Object.class);
+                FMethodInterceptor.class, String.class, Class[].class, Object[].class, Object.class);
 
         for (Method item : arrMethod)
         {
@@ -125,8 +125,6 @@ public class FProxyFactory
 
             // FMethodInterceptor localMethodInterceptor;
             Local<FMethodInterceptor> localMethodInterceptor = helper.newLocal(code, FMethodInterceptor.class);
-            // Class localClass;
-            Local<Class> localClass = helper.newLocal(code, Class.class);
             // String localMethodName;
             Local<String> localMethodName = helper.newLocal(code, String.class);
             // Class[] localArgsClass;
@@ -142,11 +140,6 @@ public class FProxyFactory
 
             // ---------- 变量赋值 ----------
             code.iget(fieldMethodInterceptor, localMethodInterceptor, localThis);
-
-            MethodId methodGetClass = helper.getMethod(helper.getSubClass(),
-                    Class.class, "getClass");
-            code.invokeVirtual(methodGetClass, localClass,
-                    localThis);
 
             code.loadConstant(localMethodName, methodName);
 
@@ -189,7 +182,7 @@ public class FProxyFactory
 
             // 调用拦截对象
             code.invokeStatic(methodNotifyInterceptor, isReturnVoid ? null : localReturnObject,
-                    localMethodInterceptor, localClass, localMethodName, localArgsClass, localArgsValue, localThis);
+                    localMethodInterceptor, localMethodName, localArgsClass, localArgsValue, localThis);
 
             if (isReturnVoid)
             {
