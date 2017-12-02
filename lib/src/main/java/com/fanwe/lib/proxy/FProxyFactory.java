@@ -18,7 +18,7 @@ import java.lang.reflect.Modifier;
  */
 public class FProxyFactory
 {
-    public static final String DIR_NAME_DEX = "dexfiles";
+    public static final String DIR_NAME_DEX = "f_dexfiles";
 
     private Context mContext;
 
@@ -35,6 +35,14 @@ public class FProxyFactory
     public File getDexDir()
     {
         return mContext.getDir(DIR_NAME_DEX, Context.MODE_PRIVATE);
+    }
+
+    /**
+     * 清空所有保存本地的代理class
+     */
+    public void clearDexFiles()
+    {
+        deleteFileOrDir(getDexDir());
     }
 
     /**
@@ -267,5 +275,26 @@ public class FProxyFactory
                 code.returnValue(localReturn);
             }
         }
+    }
+
+    private static boolean deleteFileOrDir(File path)
+    {
+        if (path == null || !path.exists())
+        {
+            return true;
+        }
+        if (path.isFile())
+        {
+            return path.delete();
+        }
+        File[] files = path.listFiles();
+        if (files != null)
+        {
+            for (File file : files)
+            {
+                deleteFileOrDir(file);
+            }
+        }
+        return path.delete();
     }
 }
