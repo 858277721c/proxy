@@ -8,7 +8,6 @@ import com.android.dx.FieldId;
 import com.android.dx.Label;
 import com.android.dx.Local;
 import com.android.dx.MethodId;
-import com.android.dx.TypeId;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -107,7 +106,7 @@ public class FProxy
         Class<?> classReturnPack = null;
         Class<?>[] classArgs = null;
 
-        MethodId<?, ?> methodNotifyInterceptor = helper.getMethod(helper.getType(FProxyHelper.class),
+        MethodId<?, ?> methodNotifyInterceptor = helper.getMethod(FProxyHelper.class,
                 Object.class, FProxyHelper.METHOD_NAME_NOTIFYINTERCEPTOR,
                 FMethodInterceptor.class, Class.class, String.class, Class[].class, Object[].class, Object.class);
 
@@ -159,7 +158,7 @@ public class FProxy
             // ---------- 变量赋值 ----------
             code.iget(fieldMethodInterceptor, localMethodInterceptor, localThis);
 
-            MethodId methodGetClass = helper.getMethod(helper.getTypeSub(),
+            MethodId methodGetClass = helper.getMethod(FSub.class,
                     Class.class, "getClass");
             code.invokeVirtual(methodGetClass, localClass,
                     localThis);
@@ -185,8 +184,7 @@ public class FProxy
                     {
                         Class<?> classArgPack = DexMakerHelper.getPackedClass(classArg);
 
-                        TypeId typeArgPack = helper.getType(classArgPack);
-                        MethodId methodValueOf = helper.getMethod(typeArgPack,
+                        MethodId methodValueOf = helper.getMethod(classArgPack,
                                 classArgPack, "valueOf", classArg);
 
                         code.invokeStatic(methodValueOf, localObjectTmp,
@@ -221,7 +219,7 @@ public class FProxy
 
                     code.cast(localPackReturn, localObjectReturn);
 
-                    MethodId methodPrimitiveValue = helper.getMethod(helper.getType(classReturnPack),
+                    MethodId methodPrimitiveValue = helper.getMethod(classReturnPack,
                             classReturn, classReturn.getSimpleName() + "Value");
 
                     code.invokeVirtual(methodPrimitiveValue, localReturn, localPackReturn);

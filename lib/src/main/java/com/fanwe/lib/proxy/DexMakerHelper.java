@@ -84,7 +84,7 @@ public class DexMakerHelper
      * 声明构造方法
      *
      * @param flags      权限
-     * @param parameters 参数
+     * @param parameters 参数class数组
      * @return
      */
     public Code declareConstructor(int flags, Class<?>... parameters)
@@ -97,13 +97,13 @@ public class DexMakerHelper
      * 声明属性
      *
      * @param flags      权限
-     * @param fieldClass 属性类型
+     * @param classField 属性class
      * @param fieldName  属性名称
      * @param fieldValue 属性值
      */
-    public void declareField(int flags, Class<?> fieldClass, String fieldName, Object fieldValue)
+    public void declareField(int flags, Class<?> classField, String fieldName, Object fieldValue)
     {
-        FieldId<?, ?> field = getField(FSub.class, fieldClass, fieldName);
+        FieldId field = getField(FSub.class, classField, fieldName);
         getDexMaker().declare(field, flags, fieldValue);
     }
 
@@ -111,14 +111,14 @@ public class DexMakerHelper
      * 声明方法
      *
      * @param flags       权限
-     * @param classReturn 返回值类型
+     * @param classReturn 方法返回值class
      * @param methodName  方法名称
-     * @param parameters  方法类型class数组
+     * @param parameters  方法参数class数组
      * @return
      */
     public Code declareMethod(int flags, Class<?> classReturn, String methodName, Class<?>... parameters)
     {
-        MethodId<?, ?> method = getMethod(getTypeSub(), classReturn, methodName, parameters);
+        MethodId method = getMethod(FSub.class, classReturn, methodName, parameters);
         return getDexMaker().declare(method, flags);
     }
 
@@ -152,11 +152,11 @@ public class DexMakerHelper
     /**
      * 获得属性
      *
-     * @param classTarget 目标类
-     * @param classField  属性类
+     * @param classTarget 目标class
+     * @param classField  属性class
      * @param fieldName   属性名称
-     * @param <T>         目标类型
-     * @param <F>         属性类型
+     * @param <T>         目标class类型
+     * @param <F>         属性class类型
      * @return
      */
     public <T, F> FieldId<T, F> getField(Class<T> classTarget, Class<F> classField, String fieldName)
@@ -171,8 +171,8 @@ public class DexMakerHelper
     /**
      * 获得构造方法
      *
-     * @param classTarget
-     * @param parameters
+     * @param classTarget 目标class
+     * @param parameters  参数class数组
      * @param <T>
      * @return
      */
@@ -190,8 +190,21 @@ public class DexMakerHelper
         }
     }
 
-    public <T, R> MethodId<T, R> getMethod(TypeId<T> typeTarget, Class<R> classReturn, String methodName, Class<?>... parameters)
+    /**
+     * 获得方法
+     *
+     * @param classTarget 目标class
+     * @param classReturn 方法返回值class
+     * @param methodName  方法名称
+     * @param parameters  方法参数class数组
+     * @param <T>         目标class类型
+     * @param <R>         方法返回值class类型
+     * @return
+     */
+    public <T, R> MethodId<T, R> getMethod(Class<T> classTarget,
+                                           Class<R> classReturn, String methodName, Class<?>... parameters)
     {
+        TypeId typeTarget = getType(classTarget);
         TypeId typeReturn = getType(classReturn);
         TypeId[] typeParameters = classToTypeId(parameters);
 
