@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
             // ---------- 测试调用代理的方法 ----------
             proxy.getUp();
             float money = proxy.eatFood("banana", 1, 1.5f);
-            Person.Book book = proxy.readBooks(Person.Book.Chinese);
+            Person.Book book = proxy.readBook(Person.Book.Chinese);
             Log.i(TAG, String.valueOf(money) + "," + book);
         } catch (Exception e)
         {

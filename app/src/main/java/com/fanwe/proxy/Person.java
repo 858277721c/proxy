@@ -12,20 +12,20 @@ public class Person implements IPerson
     @Override
     public void getUp()
     {
-        Log.i(TAG, "person getUp");
+        Log.i(TAG, "getUp");
     }
 
     @Override
     public float eatFood(String food, int number, float price)
     {
-        Log.i(TAG, "person eatFood:" + food + "," + number + "," + price);
+        Log.i(TAG, "eatFood:" + food + "," + number + "," + price);
         return number * price;
     }
 
     @Override
-    public Book readBooks(Book book)
+    public Book readBook(Book book)
     {
-        Log.i(TAG, "person readBooks:" + book);
+        Log.i(TAG, "readBook:" + book);
         return book;
     }
 }

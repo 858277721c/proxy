@@ -10,7 +10,7 @@ public interface IPerson
 
     float eatFood(String food, int number, float price);
 
-    Person.Book readBooks(Person.Book book);
+    Person.Book readBook(Person.Book book);
 
     enum Book
     {
