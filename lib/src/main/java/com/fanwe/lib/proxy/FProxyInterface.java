@@ -13,16 +13,19 @@ public interface FProxyInterface
      * 代理类中可以调用父类方法的方法后缀名
      */
     String PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX = "$Super$";
+
     /**
-     * 代理类接口方法名
+     * 属性：拦截对象
+     */
+    String FIELD_NAME_METHODINTERCEPTOR = "mMethodInterceptor";
+    /**
+     * 方法：设置拦截对象
      */
     String METHOD_NAME_SETMETHODINTERCEPTOR = "setMethodInterceptor" + PROXY_CLASS_SUFFIX;
 
-    String FIELD_NAME_METHODINTERCEPTOR = "mMethodInterceptor";
-
 
     /**
-     * 设置方法拦截对象
+     * 设置拦截对象
      *
      * @param interceptor
      */
