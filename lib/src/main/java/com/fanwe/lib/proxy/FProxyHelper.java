@@ -13,8 +13,8 @@ public class FProxyHelper
      * @param interceptor
      * @param proxyClass  代理的class
      * @param methodName  方法名称
-     * @param argsClass   参数的class组
-     * @param argsValue   参数值数组
+     * @param argsClass   参数class
+     * @param argsValue   参数值
      * @param proxy       代理对象
      * @return 返回拦截对象的返回值
      */
