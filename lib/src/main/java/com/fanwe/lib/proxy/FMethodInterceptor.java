@@ -13,5 +13,5 @@ public interface FMethodInterceptor
      * @param methodInfo 方法代理
      * @return
      */
-    Object intercept(Object proxy, Object[] args, FMethodInfo methodInfo);
+    Object intercept(Object proxy, Object[] args, FInterceptInfo methodInfo);
 }

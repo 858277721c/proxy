@@ -22,7 +22,7 @@ public class FProxyHelper
                                            Class proxyClass, String methodName, Class[] argsClass, Object[] argsValue,
                                            Object proxy)
     {
-        FMethodInfo method = new FMethodInfo(proxy, methodName, argsClass);
-        return interceptor.intercept(proxy, argsValue, method);
+        FInterceptInfo info = new FInterceptInfo(proxy, methodName, argsClass);
+        return interceptor.intercept(proxy, argsValue, info);
     }
 }

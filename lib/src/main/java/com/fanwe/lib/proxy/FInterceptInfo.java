@@ -5,14 +5,14 @@ import java.lang.reflect.Method;
 /**
  * 拦截到的方法
  */
-public class FMethodInfo
+public class FInterceptInfo
 {
     private Object mProxy;
     private Class mProxyClass;
     private String mMethodName;
     private Class[] mArgsClass;
 
-    public FMethodInfo(Object proxy, String methodName, Class[] argsClass)
+    public FInterceptInfo(Object proxy, String methodName, Class[] argsClass)
     {
         mProxy = proxy;
         mProxyClass = proxy.getClass();
