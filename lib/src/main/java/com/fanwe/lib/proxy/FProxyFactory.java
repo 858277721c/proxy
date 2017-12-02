@@ -14,49 +14,27 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
- * Created by Administrator on 2017/11/30.
+ * 代理工厂
  */
-public class FProxy
+public class FProxyFactory
 {
     public static final String DIR_NAME_DEX = "dexfiles";
 
     private Context mContext;
-    private Class mSuperClass;
 
-    private File mDexDir;
-
-    public FProxy(Context context)
+    public FProxyFactory(Context context)
     {
         mContext = context.getApplicationContext();
     }
 
-    /**
-     * 设置要代理的class
-     *
-     * @param superClass
-     */
-    public void setSuperClass(Class superClass)
-    {
-        mSuperClass = superClass;
-    }
-
-    public Class getSuperClass()
-    {
-        return mSuperClass;
-    }
-
     private File getDexDir()
     {
-        if (mDexDir == null)
-        {
-            mDexDir = mContext.getDir(DIR_NAME_DEX, Context.MODE_PRIVATE);
-        }
-        return mDexDir;
+        return mContext.getDir(DIR_NAME_DEX, Context.MODE_PRIVATE);
     }
 
-    public Object newProxyInstance(FMethodInterceptor methodInterceptor) throws Exception
+    public <T> T newProxy(Class<T> clazz, FMethodInterceptor methodInterceptor) throws Exception
     {
-        DexMakerHelper helper = new DexMakerHelper(mSuperClass);
+        DexMakerHelper helper = new DexMakerHelper(clazz);
         makeProxyClass(helper);
 
         ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), getDexDir());
@@ -64,16 +42,16 @@ public class FProxy
 
         FProxyInterface instance = (FProxyInterface) classSub.newInstance();
         instance.setMethodInterceptor$FProxy$(methodInterceptor);
-        return instance;
+        return (T) instance;
     }
 
     private void makeProxyClass(DexMakerHelper helper)
     {
-        // public class com/fanwe/model/Person$FProxy$ extends com/fanwe/model/Person implements FProxyInterface
+        // public class com/fanwe/model/Person$FProxyFactory$ extends com/fanwe/model/Person implements FProxyInterface
         helper.declareClass(Modifier.PUBLIC, FProxyInterface.class);
 
         /**
-         * public com/fanwe/model/Person$FProxy$()
+         * public com/fanwe/model/Person$FProxyFactory$()
          * {
          *     super();
          * }
@@ -86,7 +64,7 @@ public class FProxy
         helper.declareField(Modifier.PRIVATE,
                 FMethodInterceptor.class, FProxyInterface.FIELD_NAME_METHODINTERCEPTOR, null);
         /**
-         * public void setMethodInterceptor$FProxy$(FMethodInterceptor interceptor)
+         * public void setMethodInterceptor$FProxyFactory$(FMethodInterceptor interceptor)
          * {
          *     mMethodInterceptor = handler;
          * }
@@ -103,7 +81,7 @@ public class FProxy
                 helper.getParameter(code, 0, FMethodInterceptor.class));
         code.returnVoid();
 
-        final Method[] arrMethod = getSuperClass().getDeclaredMethods();
+        final Method[] arrMethod = helper.getSuperClass().getDeclaredMethods();
 
         String methodName = null;
         String methodNameSuper = null;
@@ -250,7 +228,7 @@ public class FProxy
             Local[] localSuperArgsValue = null;
             localThis = helper.getThis(code);
 
-            MethodId methodSuper = helper.getMethod(mSuperClass, classReturn, methodName, classArgs);
+            MethodId methodSuper = helper.getMethod(helper.getSuperClass(), classReturn, methodName, classArgs);
 
             if (classArgs.length > 0)
             {

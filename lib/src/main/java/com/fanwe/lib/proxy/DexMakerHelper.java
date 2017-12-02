@@ -10,9 +10,9 @@ import com.android.dx.TypeId;
 import java.util.HashMap;
 
 /**
- * Created by Administrator on 2017/12/1.
+ * dex帮助类
  */
-public class DexMakerHelper
+class DexMakerHelper
 {
     private HashMap<Class, TypeId> mMapType = new HashMap<>();
 
@@ -33,6 +33,11 @@ public class DexMakerHelper
         mTypeSuper = getType(mSuperClass);
         final String typeSubName = mTypeSuper.getName().replace(";", FProxyInterface.PROXY_CLASS_SUFFIX + ";");
         mTypeSub = TypeId.get(typeSubName);
+    }
+
+    public Class<?> getSuperClass()
+    {
+        return mSuperClass;
     }
 
     public String getProxyClassName()

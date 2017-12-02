@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.fanwe.lib.proxy.FMethodInterceptor;
 import com.fanwe.lib.proxy.FMethodProxy;
-import com.fanwe.lib.proxy.FProxy;
+import com.fanwe.lib.proxy.FProxyFactory;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -20,9 +20,8 @@ public class MainActivity extends AppCompatActivity
 
         try
         {
-            FProxy proxy = new FProxy(this);
-            proxy.setSuperClass(Person.class);
-            Person person = (Person) proxy.newProxyInstance(new FMethodInterceptor()
+            FProxyFactory factory = new FProxyFactory(this);
+            Person person = factory.newProxy(Person.class, new FMethodInterceptor()
             {
                 @Override
                 public Object intercept(Object proxy, Object[] args, FMethodProxy methodProxy)
