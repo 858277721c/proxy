@@ -162,7 +162,8 @@ public class FProxyFactory
         for (Method item : arrMethod)
         {
             methodName = item.getName();
-            if (methodName.contains("$"))
+            if (methodName.contains("$") ||
+                    Modifier.isStatic(item.getModifiers()))
             {
                 continue;
             }
