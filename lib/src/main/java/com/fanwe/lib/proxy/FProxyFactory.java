@@ -50,6 +50,7 @@ public class FProxyFactory
         // public class com/fanwe/model/Person$FProxyFactory$ extends com/fanwe/model/Person implements FProxyInterface
         helper.declareClass(Modifier.PUBLIC, FProxyInterface.class);
 
+        // ---------- 构造方法start ----------
         /**
          * public com/fanwe/model/Person$FProxyFactory$()
          * {
@@ -59,10 +60,15 @@ public class FProxyFactory
         Code code = helper.declareConstructor(Modifier.PUBLIC);
         code.invokeDirect(helper.getTypeSuper().getConstructor(), null, helper.getThis(code));
         code.returnVoid();
+        // ---------- 构造方法end ----------
 
+        // ---------- 属性start ----------
         // private FMethodInterceptor mMethodInterceptor = null;
         helper.declareField(Modifier.PRIVATE,
                 FMethodInterceptor.class, FProxyInterface.FIELD_NAME_METHODINTERCEPTOR, null);
+        // ---------- 属性end ----------
+
+        // ---------- FProxyInterface接口方法start ----------
         /**
          * public void setMethodInterceptor$FProxyFactory$(FMethodInterceptor interceptor)
          * {
@@ -80,6 +86,7 @@ public class FProxyFactory
                 helper.getThis(code),
                 helper.getParameter(code, 0, FMethodInterceptor.class));
         code.returnVoid();
+        // ---------- FProxyInterface接口方法end ----------
 
         final Method[] arrMethod = helper.getSuperClass().getDeclaredMethods();
 
