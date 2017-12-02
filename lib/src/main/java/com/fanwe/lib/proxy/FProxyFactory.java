@@ -10,7 +10,6 @@ import com.android.dx.Local;
 import com.android.dx.MethodId;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -83,16 +82,6 @@ public class FProxyFactory
             if (Modifier.isFinal(modifiers))
             {
                 throw new FProxyException("clazz must not be final");
-            }
-            Constructor constructor = clazz.getDeclaredConstructor();
-            if (constructor == null)
-            {
-                throw new FProxyException("clazz must provide a none parameter constructor");
-            }
-            modifiers = constructor.getModifiers();
-            if (Modifier.isPrivate(modifiers))
-            {
-                throw new FProxyException("clazz none parameter constructor must not be private");
             }
 
             DexMakerHelper helper = new DexMakerHelper(clazz);
