@@ -81,7 +81,7 @@ public class FProxyFactory
             DexMakerHelper helper = new DexMakerHelper(clazz);
             makeProxyClass(helper);
 
-            ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), getDexDir());
+            ClassLoader loader = helper.getDexMaker().generateAndLoad(clazz.getClassLoader(), getDexDir());
             Class<?> classProxy = loader.loadClass(helper.getProxyClassName());
 
             FProxyInterface proxy = (FProxyInterface) classProxy.newInstance();
