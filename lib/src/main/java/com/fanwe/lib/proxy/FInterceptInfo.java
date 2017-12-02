@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 public class FInterceptInfo
 {
     private Object mProxy;
-    private Class mProxyClass;
     private String mMethodName;
     private Class[] mArgsClass;
 
@@ -18,7 +17,6 @@ public class FInterceptInfo
     public FInterceptInfo(Object proxy, String methodName, Class[] argsClass)
     {
         mProxy = proxy;
-        mProxyClass = proxy.getClass();
         mMethodName = methodName;
         mArgsClass = argsClass;
     }
@@ -43,13 +41,14 @@ public class FInterceptInfo
      *
      * @return
      */
-    private Method getSuperMethod()
+    private Method getMethodInvokeSuper()
     {
         try
         {
             if (mMethodSuper == null)
             {
-                mMethodSuper = mProxyClass.getDeclaredMethod(mMethodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX, mArgsClass);
+                mMethodSuper = getProxy().getClass().getDeclaredMethod(mMethodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX,
+                        mArgsClass);
             }
         } catch (NoSuchMethodException e)
         {
@@ -59,7 +58,7 @@ public class FInterceptInfo
     }
 
     /**
-     * 返回当前拦截到的方法
+     * 返回拦截到的方法
      *
      * @return
      */
@@ -69,7 +68,7 @@ public class FInterceptInfo
         {
             if (mMethod == null)
             {
-                mMethod = mProxyClass.getDeclaredMethod(mMethodName, mArgsClass);
+                mMethod = getProxy().getClass().getSuperclass().getDeclaredMethod(mMethodName, mArgsClass);
             }
         } catch (NoSuchMethodException e)
         {
@@ -87,6 +86,6 @@ public class FInterceptInfo
      */
     public Object invokeSuper(Object[] args) throws Exception
     {
-        return getSuperMethod().invoke(mProxy, args);
+        return getMethodInvokeSuper().invoke(getProxy(), args);
     }
 }
