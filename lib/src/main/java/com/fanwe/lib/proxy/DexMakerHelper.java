@@ -94,7 +94,7 @@ class DexMakerHelper
      * 声明构造方法
      *
      * @param flags      权限
-     * @param parameters 参数的class数组
+     * @param parameters 参数的class
      * @return
      */
     public Code declareConstructor(int flags, Class<?>... parameters)
@@ -123,7 +123,7 @@ class DexMakerHelper
      * @param flags       权限
      * @param classReturn 方法返回值的class
      * @param methodName  方法名称
-     * @param parameters  方法参数的class数组
+     * @param parameters  方法参数的class
      * @return
      */
     public Code declareMethod(int flags, Class<?> classReturn, String methodName, Class<?>... parameters)
@@ -181,7 +181,7 @@ class DexMakerHelper
      * 获得构造方法
      *
      * @param classTarget 目标的class
-     * @param parameters  参数的class数组
+     * @param parameters  参数的class
      * @param <T>
      * @return
      */
@@ -205,7 +205,7 @@ class DexMakerHelper
      * @param classTarget 目标的class
      * @param classReturn 方法返回值的class
      * @param methodName  方法名称
-     * @param parameters  方法参数的class数组
+     * @param parameters  方法参数的class
      * @param <T>         目标的class类型
      * @param <R>         方法返回值的class类型
      * @return
@@ -224,6 +224,20 @@ class DexMakerHelper
         {
             return typeTarget.getMethod(typeReturn, methodName);
         }
+    }
+
+    /**
+     * 返回基本类型的valueOf方法
+     *
+     * @param clazz 基本类型的class
+     * @return
+     */
+    public MethodId<?, ?> getMethodPrimitiveValueOf(Class<?> clazz)
+    {
+        Class classPack = getPackedClass(clazz);
+
+        return getMethod(classPack,
+                classPack, "valueOf", clazz);
     }
 
     /**
@@ -265,6 +279,7 @@ class DexMakerHelper
         TypeId type = getType(clazz);
         return code.newLocal(type);
     }
+
 
     public TypeId<?>[] classToTypeId(Class<?>[] arrClass)
     {

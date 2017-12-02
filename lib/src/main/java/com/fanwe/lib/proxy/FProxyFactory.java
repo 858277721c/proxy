@@ -169,12 +169,9 @@ public class FProxyFactory
 
                     if (classArg.isPrimitive())
                     {
-                        Class<?> classArgPack = DexMakerHelper.getPackedClass(classArg);
-
-                        MethodId methodValueOf = helper.getMethod(classArgPack,
-                                classArgPack, "valueOf", classArg);
-
-                        code.invokeStatic(methodValueOf, localObjectTmp,
+                        MethodId methodValueOf = helper.getMethodPrimitiveValueOf(classArg);
+                        code.invokeStatic(methodValueOf,
+                                localObjectTmp,
                                 helper.getParameter(code, i, classArg));
 
                         code.aput(localArgsValue, localIntTmp, localObjectTmp);
