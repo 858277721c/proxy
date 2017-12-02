@@ -18,7 +18,7 @@ import java.lang.reflect.Modifier;
  */
 public class FProxyFactory
 {
-    public static final String DIR_NAME_DEX = "f_dexfiles";
+    private static final String DIR_NAME_DEX = "f_proxy_files";
 
     private Context mContext;
 
