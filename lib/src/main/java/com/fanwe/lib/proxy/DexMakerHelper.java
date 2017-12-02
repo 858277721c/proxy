@@ -20,15 +20,15 @@ class DexMakerHelper
     private Class<?> mSuperClass;
 
     private final TypeId<?> mTypeSuper;
-    private final TypeId<?> mTypeSub;
+    private final TypeId<?> mTypeProxy;
 
     public DexMakerHelper(Class<?> superClass)
     {
         mSuperClass = superClass;
 
         mTypeSuper = getType(mSuperClass);
-        final String typeSubName = mTypeSuper.getName().replace(";", FProxyInterface.PROXY_CLASS_SUFFIX + ";");
-        mTypeSub = TypeId.get(typeSubName);
+        final String typeProxyName = mTypeSuper.getName().replace(";", FProxyInterface.PROXY_CLASS_SUFFIX + ";");
+        mTypeProxy = TypeId.get(typeProxyName);
     }
 
     public Class<?> getSuperClass()
@@ -51,9 +51,9 @@ class DexMakerHelper
         return mTypeSuper;
     }
 
-    public TypeId<?> getTypeSub()
+    public TypeId<?> getTypeProxy()
     {
-        return mTypeSub;
+        return mTypeProxy;
     }
 
     public DexMaker getDexMaker()
@@ -76,15 +76,15 @@ class DexMakerHelper
         TypeId[] arrType = classToTypeId(interfaces);
         if (arrType != null)
         {
-            getDexMaker().declare(getTypeSub(),
-                    getTypeSub().getName(),
+            getDexMaker().declare(getTypeProxy(),
+                    getTypeProxy().getName(),
                     flags,
                     getTypeSuper(),
                     arrType);
         } else
         {
-            getDexMaker().declare(getTypeSub(),
-                    getTypeSub().getName(),
+            getDexMaker().declare(getTypeProxy(),
+                    getTypeProxy().getName(),
                     flags,
                     getTypeSuper());
         }
@@ -139,7 +139,7 @@ class DexMakerHelper
         {
             if (clazz == FSub.class)
             {
-                typeId = getTypeSub();
+                typeId = getTypeProxy();
             } else if (clazz == Void.class)
             {
                 typeId = TypeId.VOID;
@@ -234,7 +234,7 @@ class DexMakerHelper
      */
     public Local getThis(Code code)
     {
-        return code.getThis(getTypeSub());
+        return code.getThis(getTypeProxy());
     }
 
     /**
