@@ -25,10 +25,6 @@ class DexMakerHelper
     public DexMakerHelper(Class<?> superClass)
     {
         mSuperClass = superClass;
-        if (superClass == FSub.class)
-        {
-            throw new IllegalArgumentException("superClass must not be FSub.class");
-        }
 
         mTypeSuper = getType(mSuperClass);
         final String typeSubName = mTypeSuper.getName().replace(";", FProxyInterface.PROXY_CLASS_SUFFIX + ";");
@@ -38,6 +34,11 @@ class DexMakerHelper
     public Class<?> getSuperClass()
     {
         return mSuperClass;
+    }
+
+    public Class<?> getSubClass()
+    {
+        return FSub.class;
     }
 
     public String getProxyClassName()
@@ -98,7 +99,7 @@ class DexMakerHelper
      */
     public Code declareConstructor(int flags, Class<?>... parameters)
     {
-        MethodId method = getConstructor(FSub.class, parameters);
+        MethodId method = getConstructor(getSubClass(), parameters);
         return getDexMaker().declare(method, flags);
     }
 
@@ -112,7 +113,7 @@ class DexMakerHelper
      */
     public void declareField(int flags, Class<?> classField, String fieldName, Object fieldValue)
     {
-        FieldId field = getField(FSub.class, classField, fieldName);
+        FieldId field = getField(getSubClass(), classField, fieldName);
         getDexMaker().declare(field, flags, fieldValue);
     }
 
@@ -127,7 +128,7 @@ class DexMakerHelper
      */
     public Code declareMethod(int flags, Class<?> classReturn, String methodName, Class<?>... parameters)
     {
-        MethodId method = getMethod(FSub.class, classReturn, methodName, parameters);
+        MethodId method = getMethod(getSubClass(), classReturn, methodName, parameters);
         return getDexMaker().declare(method, flags);
     }
 
@@ -316,5 +317,13 @@ class DexMakerHelper
         {
             return primitive;
         }
+    }
+
+    /**
+     * 由于创建代理的时候无法获得代理对象的class<br>
+     * 所以当传入的对象class为这个类的class的时候会被当做代理对象的class
+     */
+    private class FSub
+    {
     }
 }

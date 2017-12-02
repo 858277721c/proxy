@@ -73,7 +73,7 @@ public class FProxyFactory
                 Void.class, FProxyInterface.METHOD_NAME_SETMETHODINTERCEPTOR,
                 FMethodInterceptor.class);
 
-        FieldId fieldMethodInterceptor = helper.getField(FSub.class,
+        FieldId fieldMethodInterceptor = helper.getField(helper.getSubClass(),
                 FMethodInterceptor.class, FProxyInterface.FIELD_NAME_METHODINTERCEPTOR);
 
         code.iput(fieldMethodInterceptor,
@@ -143,7 +143,7 @@ public class FProxyFactory
             // ---------- 变量赋值 ----------
             code.iget(fieldMethodInterceptor, localMethodInterceptor, localThis);
 
-            MethodId methodGetClass = helper.getMethod(FSub.class,
+            MethodId methodGetClass = helper.getMethod(helper.getSubClass(),
                     Class.class, "getClass");
             code.invokeVirtual(methodGetClass, localClass,
                     localThis);
