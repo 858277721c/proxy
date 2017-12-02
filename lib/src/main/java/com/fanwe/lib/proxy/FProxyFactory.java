@@ -107,7 +107,6 @@ public class FProxyFactory
         String methodName = null;
         String methodNameSuper = null;
         Class<?> classReturn = null;
-        Class<?> classReturnPack = null;
         boolean isReturnVoid = false;
         Class<?>[] classArgs = null;
 
@@ -135,8 +134,7 @@ public class FProxyFactory
             Local localReturnPack = null;
             if (classReturn.isPrimitive())
             {
-                classReturnPack = DexMakerHelper.getPackedClass(classReturn);
-                localReturnPack = helper.newLocal(code, classReturnPack);
+                localReturnPack = helper.newLocal(code, DexMakerHelper.getPackedClass(classReturn));
             }
 
             Local<Object> localReturnObject = helper.newLocal(code, Object.class);
@@ -203,10 +201,7 @@ public class FProxyFactory
                     code.compare(Comparison.EQ, ifNull, localReturnObject, localReturnPack);
 
                     code.cast(localReturnPack, localReturnObject);
-
-                    MethodId methodPrimitiveValue = helper.getMethod(classReturnPack,
-                            classReturn, classReturn.getSimpleName() + "Value");
-
+                    MethodId methodPrimitiveValue = helper.getMethodPrimitiveValue(classReturn);
                     code.invokeVirtual(methodPrimitiveValue, localReturn, localReturnPack);
                     code.returnValue(localReturn);
 
