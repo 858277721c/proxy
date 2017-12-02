@@ -23,6 +23,6 @@ public class FProxyHelper
                                            Object proxy)
     {
         FInterceptInfo info = new FInterceptInfo(proxy, methodName, argsClass);
-        return interceptor.intercept(proxy, argsValue, info);
+        return interceptor.intercept(info, argsValue);
     }
 }
