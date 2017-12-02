@@ -12,16 +12,19 @@ public class MainActivity extends AppCompatActivity
 {
     public static final String TAG = MainActivity.class.getSimpleName();
 
+    private FProxyFactory mProxyFactory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mProxyFactory = new FProxyFactory(this);
+
         try
         {
-            FProxyFactory factory = new FProxyFactory(this);
-            Person person = factory.newProxy(Person.class, new FMethodInterceptor()
+            Person person = mProxyFactory.newProxy(Person.class, new FMethodInterceptor()
             {
                 @Override
                 public Object intercept(FInterceptInfo info, Object[] args)
@@ -51,5 +54,12 @@ public class MainActivity extends AppCompatActivity
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        mProxyFactory.clearDexFiles();
     }
 }
