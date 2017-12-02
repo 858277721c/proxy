@@ -137,8 +137,8 @@ public class FProxy
                 localReturnPack = helper.newLocal(code, classReturnPack);
             }
 
-            // Object localObjectReturn;
-            Local<Object> localObjectReturn = helper.newLocal(code, Object.class);
+            // Object localReturnObject;
+            Local<Object> localReturnObject = helper.newLocal(code, Object.class);
 
             // FMethodInterceptor localMethodInterceptor;
             Local<FMethodInterceptor> localMethodInterceptor = helper.newLocal(code, FMethodInterceptor.class);
@@ -205,7 +205,7 @@ public class FProxy
             }
 
             // 调用拦截对象
-            code.invokeStatic(methodNotifyInterceptor, isReturnVoid ? null : localObjectReturn,
+            code.invokeStatic(methodNotifyInterceptor, isReturnVoid ? null : localReturnObject,
                     localMethodInterceptor, localClass, localMethodName, localArgsClass, localArgsValue, localThis);
 
             if (isReturnVoid)
@@ -217,9 +217,9 @@ public class FProxy
                 {
                     Label ifNull = new Label();
                     code.loadConstant(localReturnPack, null);
-                    code.compare(Comparison.EQ, ifNull, localObjectReturn, localReturnPack);
+                    code.compare(Comparison.EQ, ifNull, localReturnObject, localReturnPack);
 
-                    code.cast(localReturnPack, localObjectReturn);
+                    code.cast(localReturnPack, localReturnObject);
 
                     MethodId methodPrimitiveValue = helper.getMethod(classReturnPack,
                             classReturn, classReturn.getSimpleName() + "Value");
@@ -232,7 +232,7 @@ public class FProxy
                     code.returnValue(localReturn);
                 } else
                 {
-                    code.cast(localReturn, localObjectReturn);
+                    code.cast(localReturn, localReturnObject);
                     code.returnValue(localReturn);
                 }
             }
