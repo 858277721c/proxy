@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.fanwe.lib.proxy.FMethodInterceptor;
-import com.fanwe.lib.proxy.FMethodProxy;
+import com.fanwe.lib.proxy.FMethodInfo;
 import com.fanwe.lib.proxy.FProxyFactory;
 
 public class MainActivity extends AppCompatActivity
@@ -24,12 +24,12 @@ public class MainActivity extends AppCompatActivity
             Person person = factory.newProxy(Person.class, new FMethodInterceptor()
             {
                 @Override
-                public Object intercept(Object proxy, Object[] args, FMethodProxy methodProxy)
+                public Object intercept(Object proxy, Object[] args, FMethodInfo methodInfo)
                 {
                     try
                     {
-                        Log.i(TAG, "before method---------->" + methodProxy.getMethod().getName());
-                        Object result = methodProxy.invokeSuper(args);
+                        Log.i(TAG, "before method---------->" + methodInfo.getMethod().getName());
+                        Object result = methodInfo.invokeSuper(args);
                         Log.e(TAG, "after method");
                         return result;
                     } catch (Exception e)

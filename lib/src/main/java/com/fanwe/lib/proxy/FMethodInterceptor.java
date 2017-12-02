@@ -10,8 +10,8 @@ public interface FMethodInterceptor
      *
      * @param proxy       代理对象
      * @param args        方法参数值数组
-     * @param methodProxy 方法代理
+     * @param methodInfo 方法代理
      * @return
      */
-    Object intercept(Object proxy, Object[] args, FMethodProxy methodProxy);
+    Object intercept(Object proxy, Object[] args, FMethodInfo methodInfo);
 }

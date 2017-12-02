@@ -3,20 +3,18 @@ package com.fanwe.lib.proxy;
 import java.lang.reflect.Method;
 
 /**
- * 方法代理
+ * 拦截到的方法
  */
-public class FMethodProxy
+public class FMethodInfo
 {
     private Object mProxy;
-
     private Class mProxyClass;
     private String mMethodName;
     private Class[] mArgsClass;
 
-    public FMethodProxy(Object proxy, String methodName, Class[] argsClass)
+    public FMethodInfo(Object proxy, String methodName, Class[] argsClass)
     {
         mProxy = proxy;
-
         mProxyClass = proxy.getClass();
         mMethodName = methodName;
         mArgsClass = argsClass;
@@ -59,6 +57,16 @@ public class FMethodProxy
     }
 
     /**
+     * 返回代理
+     *
+     * @return
+     */
+    public Object getProxy()
+    {
+        return mProxy;
+    }
+
+    /**
      * 调用代理的父类方法
      *
      * @param args
@@ -68,5 +76,18 @@ public class FMethodProxy
     public Object invokeSuper(Object[] args) throws Exception
     {
         return getSuperMethod().invoke(mProxy, args);
+    }
+
+    /**
+     * 调用某个对象的方法
+     *
+     * @param object
+     * @param args
+     * @return
+     * @throws Exception
+     */
+    public Object invokeObject(Object object, Object[] args) throws Exception
+    {
+        return getMethod().invoke(object, args);
     }
 }
