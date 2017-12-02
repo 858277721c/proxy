@@ -156,8 +156,6 @@ public class FProxyFactory
             Local localObjectTmp = helper.newLocal(code, Object.class);
 
             // ---------- 变量赋值 ----------
-            code.iget(fieldMethodInterceptor, localMethodInterceptor, helper.getThis(code));
-
             code.loadConstant(localMethodName, methodName);
 
             if (classArgs.length > 0)
