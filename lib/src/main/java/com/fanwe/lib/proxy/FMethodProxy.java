@@ -7,13 +7,17 @@ import java.lang.reflect.Method;
  */
 public class FMethodProxy
 {
+    private Object mProxy;
+
     private Class mProxyClass;
     private String mMethodName;
     private Class[] mArgsClass;
 
-    public FMethodProxy(Class proxyClass, String methodName, Class[] argsClass)
+    public FMethodProxy(Object proxy, String methodName, Class[] argsClass)
     {
-        mProxyClass = proxyClass;
+        mProxy = proxy;
+
+        mProxyClass = proxy.getClass();
         mMethodName = methodName;
         mArgsClass = argsClass;
     }
@@ -57,13 +61,12 @@ public class FMethodProxy
     /**
      * 调用代理的父类方法
      *
-     * @param proxy
      * @param args
      * @return
      * @throws Exception
      */
-    public Object invokeSuper(Object proxy, Object[] args) throws Exception
+    public Object invokeSuper(Object[] args) throws Exception
     {
-        return getSuperMethod().invoke(proxy, args);
+        return getSuperMethod().invoke(mProxy, args);
     }
 }

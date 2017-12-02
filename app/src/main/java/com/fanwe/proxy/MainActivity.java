@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
                     try
                     {
                         Log.i(TAG, "before method---------->" + methodProxy.getMethod().getName());
-                        Object result = methodProxy.invokeSuper(proxy, args);
+                        Object result = methodProxy.invokeSuper(args);
                         Log.e(TAG, "after method");
                         return result;
                     } catch (Exception e)
