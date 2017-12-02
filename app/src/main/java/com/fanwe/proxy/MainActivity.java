@@ -47,9 +47,7 @@ public class MainActivity extends AppCompatActivity
             person.getUp();
             float money = person.eatFood("banana", 1, 1.5f);
             Person.Book book = person.readBooks(Person.Book.Chinese);
-            Long time = person.sleepAt(System.currentTimeMillis());
-
-            Log.i(TAG, String.valueOf(money) + "," + book + "," + time);
+            Log.i(TAG, String.valueOf(money) + "," + book);
         } catch (Exception e)
         {
             e.printStackTrace();
