@@ -60,7 +60,7 @@ public class FProxyFactory
     {
         if (methodInterceptor == null)
         {
-            throw new IllegalArgumentException("methodInterceptor must not be null");
+            throw new FProxyException("methodInterceptor must not be null");
         }
 
         if (clazz.isInterface())
@@ -78,6 +78,11 @@ public class FProxyFactory
             return (T) proxy;
         } else
         {
+            if (Modifier.isFinal(clazz.getModifiers()))
+            {
+                throw new FProxyException("clazz must not be final");
+            }
+
             DexMakerHelper helper = new DexMakerHelper(clazz);
             makeProxyClass(helper);
 

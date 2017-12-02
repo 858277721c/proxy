@@ -1,0 +1,26 @@
+package com.fanwe.lib.proxy;
+
+/**
+ * 通用异常
+ */
+public class FProxyException extends Exception
+{
+    public FProxyException()
+    {
+    }
+
+    public FProxyException(String message)
+    {
+        super(message);
+    }
+
+    public FProxyException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
+
+    public FProxyException(Throwable cause)
+    {
+        super(cause);
+    }
+}
