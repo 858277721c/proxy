@@ -25,6 +25,10 @@ public class DexMakerHelper
     public DexMakerHelper(Class<?> superClass)
     {
         mSuperClass = superClass;
+        if (superClass == FSub.class)
+        {
+            throw new IllegalArgumentException("superClass must not be FSub.class");
+        }
 
         mTypeSuper = getType(mSuperClass);
         final String typeSubName = mTypeSuper.getName().replace(";", FProxyInterface.PROXY_CLASS_SUFFIX + ";");
