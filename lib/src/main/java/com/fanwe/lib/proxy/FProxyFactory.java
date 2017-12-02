@@ -137,6 +137,7 @@ public class FProxyFactory
                 localReturnPack = helper.newLocal(code, DexMakerHelper.getPackedClass(classReturn));
             }
 
+            // 保存方法拦截的返回值
             Local<Object> localReturnInterceptor = helper.newLocal(code, Object.class);
 
             Local<String> localMethodName = helper.newLocal(code, String.class);
