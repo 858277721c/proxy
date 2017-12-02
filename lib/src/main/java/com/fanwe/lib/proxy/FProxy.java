@@ -127,33 +127,33 @@ public class FProxy
             // ---------- 变量 ----------
 
             // 保存返回值
-            Local localReturn = code.newLocal(helper.getType(classReturn));
+            Local localReturn = helper.newLocal(code, classReturn);
             Local localPackReturn = null;
             if (classReturn.isPrimitive())
             {
                 classReturnPack = DexMakerHelper.getPackedClass(classReturn);
-                localPackReturn = code.newLocal(helper.getType(classReturnPack));
+                localPackReturn = helper.newLocal(code, classReturnPack);
             }
 
             // Object localObjectReturn;
-            Local<Object> localObjectReturn = code.newLocal(helper.getType(Object.class));
+            Local<Object> localObjectReturn = helper.newLocal(code, Object.class);
 
             // FMethodInterceptor localMethodInterceptor;
-            Local<FMethodInterceptor> localMethodInterceptor = code.newLocal(helper.getType(FMethodInterceptor.class));
+            Local<FMethodInterceptor> localMethodInterceptor = helper.newLocal(code, FMethodInterceptor.class);
             // Class localClass;
-            Local<Class> localClass = code.newLocal(helper.getType(Class.class));
+            Local<Class> localClass = helper.newLocal(code, Class.class);
             // String localMethodName;
-            Local<String> localMethodName = code.newLocal(helper.getType(String.class));
+            Local<String> localMethodName = helper.newLocal(code, String.class);
             // Class[] localArgsClass;
-            Local<Class[]> localArgsClass = code.newLocal(helper.getType(Class[].class));
+            Local<Class[]> localArgsClass = helper.newLocal(code, Class[].class);
             // Object[] localArgsValue;
-            Local<Object[]> localArgsValue = code.newLocal(helper.getType(Object[].class));
+            Local<Object[]> localArgsValue = helper.newLocal(code, Object[].class);
 
             // Int localIntTmp;
-            Local<Integer> localIntTmp = code.newLocal(helper.getType(int.class));
+            Local<Integer> localIntTmp = helper.newLocal(code, int.class);
             // Class localClassTmp;
-            Local<Class> localClassTmp = code.newLocal(helper.getType(Class.class));
-            Local localObjectTmp = code.newLocal(helper.getType(Object.class));
+            Local<Class> localClassTmp = helper.newLocal(code, Class.class);
+            Local localObjectTmp = helper.newLocal(code, Object.class);
 
             // ---------- 变量赋值 ----------
             code.iget(fieldMethodInterceptor, localMethodInterceptor, localThis);
@@ -239,7 +239,7 @@ public class FProxy
 //            methodNameSuper = methodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX;
 //            code = helper.declareMethod(item.getModifiers(), classReturn, methodNameSuper, classArgs);
 //
-//            localReturn = code.newLocal(helper.getType(classReturn));
+//            localReturn = helper.newLocal(code, classReturn);
 //            Local[] localSuperArgsValue = null;
 //            localThis = helper.getThis(code);
 //
