@@ -164,11 +164,15 @@ public class FProxyFactory
                 Object.class, FProxyHelper.METHOD_NAME_NOTIFYINTERCEPTOR,
                 String.class, Class[].class, Object[].class, Object.class);
 
+        int modifiers = 0;
+
         for (Method item : arrMethod)
         {
+            modifiers = item.getModifiers();
             methodName = item.getName();
             if (methodName.contains("$") ||
-                    Modifier.isStatic(item.getModifiers()))
+                    Modifier.isStatic(modifiers) ||
+                    Modifier.isFinal(modifiers))
             {
                 continue;
             }
