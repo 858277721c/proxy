@@ -84,7 +84,7 @@ public class DexMakerHelper
      * 声明构造方法
      *
      * @param flags      权限
-     * @param parameters 参数class数组
+     * @param parameters 参数的class数组
      * @return
      */
     public Code declareConstructor(int flags, Class<?>... parameters)
@@ -97,7 +97,7 @@ public class DexMakerHelper
      * 声明属性
      *
      * @param flags      权限
-     * @param classField 属性class
+     * @param classField 属性的class
      * @param fieldName  属性名称
      * @param fieldValue 属性值
      */
@@ -111,9 +111,9 @@ public class DexMakerHelper
      * 声明方法
      *
      * @param flags       权限
-     * @param classReturn 方法返回值class
+     * @param classReturn 方法返回值的class
      * @param methodName  方法名称
-     * @param parameters  方法参数class数组
+     * @param parameters  方法参数的class数组
      * @return
      */
     public Code declareMethod(int flags, Class<?> classReturn, String methodName, Class<?>... parameters)
@@ -152,11 +152,11 @@ public class DexMakerHelper
     /**
      * 获得属性
      *
-     * @param classTarget 目标class
-     * @param classField  属性class
+     * @param classTarget 目标的class
+     * @param classField  属性的class
      * @param fieldName   属性名称
-     * @param <T>         目标class类型
-     * @param <F>         属性class类型
+     * @param <T>         目标的class类型
+     * @param <F>         属性的class类型
      * @return
      */
     public <T, F> FieldId<T, F> getField(Class<T> classTarget, Class<F> classField, String fieldName)
@@ -170,8 +170,8 @@ public class DexMakerHelper
     /**
      * 获得构造方法
      *
-     * @param classTarget 目标class
-     * @param parameters  参数class数组
+     * @param classTarget 目标的class
+     * @param parameters  参数的class数组
      * @param <T>
      * @return
      */
@@ -192,12 +192,12 @@ public class DexMakerHelper
     /**
      * 获得方法
      *
-     * @param classTarget 目标class
-     * @param classReturn 方法返回值class
+     * @param classTarget 目标的class
+     * @param classReturn 方法返回值的class
      * @param methodName  方法名称
-     * @param parameters  方法参数class数组
-     * @param <T>         目标class类型
-     * @param <R>         方法返回值class类型
+     * @param parameters  方法参数的class数组
+     * @param <T>         目标的class类型
+     * @param <R>         方法返回值的class类型
      * @return
      */
     public <T, R> MethodId<T, R> getMethod(Class<T> classTarget,
@@ -216,17 +216,40 @@ public class DexMakerHelper
         }
     }
 
+    /**
+     * 获得当前对象this
+     *
+     * @param code
+     * @return
+     */
     public Local getThis(Code code)
     {
         return code.getThis(getTypeSub());
     }
 
+    /**
+     * 获得参数
+     *
+     * @param code
+     * @param index 第几个参数
+     * @param clazz 参数的class
+     * @param <T>   参数的class类型
+     * @return
+     */
     public <T> Local<T> getParameter(Code code, int index, Class<T> clazz)
     {
         TypeId type = getType(clazz);
         return code.getParameter(index, type);
     }
 
+    /**
+     * 创建临时变量
+     *
+     * @param code
+     * @param clazz 变量的class
+     * @param <T>   变量的class类型
+     * @return
+     */
     public <T> Local<T> newLocal(Code code, Class<T> clazz)
     {
         TypeId type = getType(clazz);
@@ -248,6 +271,12 @@ public class DexMakerHelper
         return arrResult;
     }
 
+    /**
+     * 返回基本类型的包装类
+     *
+     * @param primitive
+     * @return
+     */
     public static Class<?> getPackedClass(Class<?> primitive)
     {
         if (primitive == boolean.class)
