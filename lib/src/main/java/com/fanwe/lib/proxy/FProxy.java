@@ -91,7 +91,7 @@ public class FProxy
                 Void.class, FProxyInterface.METHOD_NAME_SETMETHODINTERCEPTOR,
                 FMethodInterceptor.class);
 
-        FieldId fieldMethodInterceptor = helper.getField(helper.getTypeSub(),
+        FieldId fieldMethodInterceptor = helper.getField(FSub.class,
                 FMethodInterceptor.class, FProxyInterface.FIELD_NAME_METHODINTERCEPTOR);
 
         code.iput(fieldMethodInterceptor,
@@ -237,37 +237,37 @@ public class FProxy
                 }
             }
 
-            // 创建调用父类的方法
-            methodNameSuper = methodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX;
-            code = helper.declareMethod(item.getModifiers(), classReturn, methodNameSuper, classArgs);
-
-            localReturn = code.newLocal(helper.getType(classReturn));
-            Local[] localSuperArgsValue = null;
-            localThis = helper.getThis(code);
-
-            MethodId methodSuper = helper.getMethod(helper.getTypeSuper(), classReturn, methodName);
-            if (classArgs.length > 0)
-            {
-                localSuperArgsValue = new Local[classArgs.length];
-                for (int i = 0; i < classArgs.length; i++)
-                {
-                    localSuperArgsValue[i] = helper.getParameter(code, i, classArgs[i]);
-                }
-
-                code.invokeSuper(methodSuper, classReturn == Void.class ? null : localReturn, localThis,
-                        localSuperArgsValue);
-            } else
-            {
-                code.invokeSuper(methodSuper, classReturn == Void.class ? null : localReturn, localThis);
-            }
-
-            if (classReturn == Void.class)
-            {
-                code.returnVoid();
-            } else
-            {
-                code.returnValue(localReturn);
-            }
+//            // 创建调用父类的方法
+//            methodNameSuper = methodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX;
+//            code = helper.declareMethod(item.getModifiers(), classReturn, methodNameSuper, classArgs);
+//
+//            localReturn = code.newLocal(helper.getType(classReturn));
+//            Local[] localSuperArgsValue = null;
+//            localThis = helper.getThis(code);
+//
+//            MethodId methodSuper = helper.getMethod(helper.getTypeSuper(), classReturn, methodName);
+//            if (classArgs.length > 0)
+//            {
+//                localSuperArgsValue = new Local[classArgs.length];
+//                for (int i = 0; i < classArgs.length; i++)
+//                {
+//                    localSuperArgsValue[i] = helper.getParameter(code, i, classArgs[i]);
+//                }
+//
+//                code.invokeSuper(methodSuper, classReturn == Void.class ? null : localReturn, localThis,
+//                        localSuperArgsValue);
+//            } else
+//            {
+//                code.invokeSuper(methodSuper, classReturn == Void.class ? null : localReturn, localThis);
+//            }
+//
+//            if (classReturn == Void.class)
+//            {
+//                code.returnVoid();
+//            } else
+//            {
+//                code.returnValue(localReturn);
+//            }
         }
     }
 }

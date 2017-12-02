@@ -89,7 +89,8 @@ public class DexMakerHelper
      */
     public Code declareConstructor(int flags, Class<?>... parameters)
     {
-        return getDexMaker().declare(getConstructor(getTypeSub(), parameters), flags);
+        MethodId method = getConstructor(FSub.class, parameters);
+        return getDexMaker().declare(method, flags);
     }
 
     /**
@@ -102,7 +103,7 @@ public class DexMakerHelper
      */
     public void declareField(int flags, Class<?> fieldClass, String fieldName, Object fieldValue)
     {
-        FieldId<?, ?> field = getField(getTypeSub(), fieldClass, fieldName);
+        FieldId<?, ?> field = getField(FSub.class, fieldClass, fieldName);
         getDexMaker().declare(field, flags, fieldValue);
     }
 
@@ -126,7 +127,10 @@ public class DexMakerHelper
         TypeId typeId = mMapType.get(clazz);
         if (typeId == null)
         {
-            if (clazz == Void.class)
+            if (clazz == FSub.class)
+            {
+                typeId = getTypeSub();
+            } else if (clazz == Void.class)
             {
                 typeId = TypeId.VOID;
             } else if (clazz == Object.class)
@@ -145,15 +149,38 @@ public class DexMakerHelper
         return typeId;
     }
 
-    public <T, F> FieldId<T, F> getField(TypeId<T> typeTarget, Class<F> fieldClass, String fieldName)
+    /**
+     * 获得属性
+     *
+     * @param classTarget 目标类
+     * @param classField  属性类
+     * @param fieldName   属性名称
+     * @param <T>         目标类型
+     * @param <F>         属性类型
+     * @return
+     */
+    public <T, F> FieldId<T, F> getField(Class<T> classTarget, Class<F> classField, String fieldName)
     {
-        FieldId<T, F> field = typeTarget.getField(getType(fieldClass), fieldName);
+        TypeId typeTarget = getType(classTarget);
+        TypeId typeField = getType(classField);
+
+        FieldId<T, F> field = typeTarget.getField(typeField, fieldName);
         return field;
     }
 
-    public <T> MethodId<T, Void> getConstructor(TypeId<T> typeTarget, Class<?>... parameters)
+    /**
+     * 获得构造方法
+     *
+     * @param classTarget
+     * @param parameters
+     * @param <T>
+     * @return
+     */
+    public <T> MethodId<T, Void> getConstructor(Class<T> classTarget, Class<?>... parameters)
     {
+        TypeId<T> typeTarget = getType(classTarget);
         TypeId[] typeParameters = classToTypeId(parameters);
+
         if (typeParameters != null)
         {
             return typeTarget.getConstructor(typeParameters);
