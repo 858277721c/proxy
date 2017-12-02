@@ -38,9 +38,9 @@ public class FProxyFactory
         makeProxyClass(helper);
 
         ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), getDexDir());
-        Class<?> classSub = loader.loadClass(helper.getProxyClassName());
+        Class<?> classProxy = loader.loadClass(helper.getProxyClassName());
 
-        FProxyInterface instance = (FProxyInterface) classSub.newInstance();
+        FProxyInterface instance = (FProxyInterface) classProxy.newInstance();
         instance.setMethodInterceptor$FProxy$(methodInterceptor);
         return (T) instance;
     }
