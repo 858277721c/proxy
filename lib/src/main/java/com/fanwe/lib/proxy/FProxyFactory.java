@@ -27,22 +27,41 @@ public class FProxyFactory
         mContext = context.getApplicationContext();
     }
 
-    private File getDexDir()
+    /**
+     * 返回代理class保存的目录
+     *
+     * @return
+     */
+    public File getDexDir()
     {
         return mContext.getDir(DIR_NAME_DEX, Context.MODE_PRIVATE);
     }
 
-    public <T> T newProxy(Class<T> clazz, FMethodInterceptor methodInterceptor) throws Exception
+    /**
+     * 创建一个代理对象
+     *
+     * @param clazz             要创建代理的class
+     * @param methodInterceptor 方法拦截回调对象
+     * @param <T>               要创建代理的class类型
+     * @return
+     * @throws Exception
+     */
+    public final <T> T newProxy(Class<T> clazz, FMethodInterceptor methodInterceptor) throws Exception
     {
+        if (methodInterceptor == null)
+        {
+            throw new IllegalArgumentException("methodInterceptor must not be null");
+        }
+
         DexMakerHelper helper = new DexMakerHelper(clazz);
         makeProxyClass(helper);
 
         ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), getDexDir());
         Class<?> classProxy = loader.loadClass(helper.getProxyClassName());
 
-        FProxyInterface instance = (FProxyInterface) classProxy.newInstance();
-        instance.setMethodInterceptor$FProxy$(methodInterceptor);
-        return (T) instance;
+        FProxyInterface proxy = (FProxyInterface) classProxy.newInstance();
+        proxy.setMethodInterceptor$FProxy$(methodInterceptor);
+        return (T) proxy;
     }
 
     private void makeProxyClass(DexMakerHelper helper)
