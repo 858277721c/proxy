@@ -172,7 +172,8 @@ public class FProxyFactory
             methodName = item.getName();
             if (methodName.contains("$") ||
                     Modifier.isStatic(modifiers) ||
-                    Modifier.isFinal(modifiers))
+                    Modifier.isFinal(modifiers) ||
+                    Modifier.isPrivate(modifiers))
             {
                 continue;
             }
