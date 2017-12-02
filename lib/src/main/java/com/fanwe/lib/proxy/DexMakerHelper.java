@@ -227,7 +227,8 @@ class DexMakerHelper
     }
 
     /**
-     * 返回基本类型的valueOf方法
+     * 返回基本类型的valueOf方法<br>
+     * 比如：Integer.valueOf(1);
      *
      * @param clazz 基本类型的class
      * @return
@@ -237,7 +238,25 @@ class DexMakerHelper
         Class classPack = getPackedClass(clazz);
 
         return getMethod(classPack,
-                classPack, "valueOf", clazz);
+                classPack,
+                "valueOf",
+                clazz);
+    }
+
+    /**
+     * 返回基本类型的Value方法<br>
+     * 比如：integer.intValue();
+     *
+     * @param clazz
+     * @return
+     */
+    public MethodId<?, ?> getMethodPrimitiveValue(Class<?> clazz)
+    {
+        Class classPack = getPackedClass(clazz);
+
+        return getMethod(classPack,
+                clazz,
+                clazz.getSimpleName() + "Value");
     }
 
     /**
