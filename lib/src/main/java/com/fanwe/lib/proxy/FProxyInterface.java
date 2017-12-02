@@ -22,7 +22,10 @@ public interface FProxyInterface
      * 方法：设置拦截对象
      */
     String METHOD_NAME_SETMETHODINTERCEPTOR = "setMethodInterceptor" + PROXY_CLASS_SUFFIX;
-
+    /**
+     * 方法：返回拦截对象
+     */
+    String METHOD_NAME_GETMETHODINTERCEPTOR = "getMethodInterceptor" + PROXY_CLASS_SUFFIX;
 
     /**
      * 设置拦截对象
@@ -30,4 +33,11 @@ public interface FProxyInterface
      * @param interceptor
      */
     void setMethodInterceptor$FProxy$(FMethodInterceptor interceptor);
+
+    /**
+     * 返回拦截对象
+     *
+     * @return
+     */
+    FMethodInterceptor getMethodInterceptor$FProxy$();
 }

@@ -21,7 +21,9 @@ public class FProxyHelper
                                            String methodName, Class[] argsClass, Object[] argsValue,
                                            Object proxy)
     {
+        FProxyInterface proxyInterface = (FProxyInterface) proxy;
+
         FInterceptInfo info = new FInterceptInfo(proxy, methodName, argsClass);
-        return interceptor.intercept(info, argsValue);
+        return proxyInterface.getMethodInterceptor$FProxy$().intercept(info, argsValue);
     }
 }

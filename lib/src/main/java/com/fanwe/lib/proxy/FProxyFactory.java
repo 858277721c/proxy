@@ -47,12 +47,12 @@ public class FProxyFactory
 
     private void makeProxyClass(DexMakerHelper helper)
     {
-        // public class com/fanwe/model/Person$FProxyFactory$ extends com/fanwe/model/Person implements FProxyInterface
+        // public class com/fanwe/model/Person$FProxy$ extends com/fanwe/model/Person implements FProxyInterface
         helper.declareClass(Modifier.PUBLIC, FProxyInterface.class);
 
         // ---------- 构造方法start ----------
         /**
-         * public com/fanwe/model/Person$FProxyFactory$()
+         * public com/fanwe/model/Person$FProxy$()
          * {
          *     super();
          * }
@@ -70,7 +70,7 @@ public class FProxyFactory
 
         // ---------- FProxyInterface接口方法start ----------
         /**
-         * public void setMethodInterceptor$FProxyFactory$(FMethodInterceptor interceptor)
+         * public void setMethodInterceptor$FProxy$(FMethodInterceptor interceptor)
          * {
          *     mMethodInterceptor = handler;
          * }
@@ -86,6 +86,20 @@ public class FProxyFactory
                 helper.getThis(code),
                 helper.getParameter(code, 0, FMethodInterceptor.class));
         code.returnVoid();
+
+        /**
+         * public FMethodInterceptor getMethodInterceptor$FProxy$()
+         * {
+         *     return this.mMethodInterceptor;
+         * }
+         */
+        code = helper.declareMethod(Modifier.PUBLIC,
+                FMethodInterceptor.class, FProxyInterface.METHOD_NAME_GETMETHODINTERCEPTOR);
+
+        Local<FMethodInterceptor> localMethodInterceptor = helper.newLocal(code, FMethodInterceptor.class);
+        code.iget(fieldMethodInterceptor, localMethodInterceptor, helper.getThis(code));
+        code.returnValue(localMethodInterceptor);
+
         // ---------- FProxyInterface接口方法end ----------
 
         final Method[] arrMethod = helper.getSuperClass().getDeclaredMethods();
@@ -114,8 +128,6 @@ public class FProxyFactory
 
             code = helper.declareMethod(item.getModifiers(), classReturn, methodName, classArgs); // 生成方法体
 
-            Local localThis = helper.getThis(code); // 保存当前代理对象
-
             // ---------- 变量 ----------
 
             // 保存返回值
@@ -131,7 +143,7 @@ public class FProxyFactory
             Local<Object> localReturnObject = helper.newLocal(code, Object.class);
 
             // FMethodInterceptor localMethodInterceptor;
-            Local<FMethodInterceptor> localMethodInterceptor = helper.newLocal(code, FMethodInterceptor.class);
+            localMethodInterceptor = helper.newLocal(code, FMethodInterceptor.class);
             // String localMethodName;
             Local<String> localMethodName = helper.newLocal(code, String.class);
             // Class[] localArgsClass;
@@ -146,7 +158,7 @@ public class FProxyFactory
             Local localObjectTmp = helper.newLocal(code, Object.class);
 
             // ---------- 变量赋值 ----------
-            code.iget(fieldMethodInterceptor, localMethodInterceptor, localThis);
+            code.iget(fieldMethodInterceptor, localMethodInterceptor, helper.getThis(code));
 
             code.loadConstant(localMethodName, methodName);
 
@@ -189,7 +201,7 @@ public class FProxyFactory
 
             // 调用拦截对象
             code.invokeStatic(methodNotifyInterceptor, isReturnVoid ? null : localReturnObject,
-                    localMethodInterceptor, localMethodName, localArgsClass, localArgsValue, localThis);
+                    localMethodInterceptor, localMethodName, localArgsClass, localArgsValue, helper.getThis(code));
 
             if (isReturnVoid)
             {
@@ -226,7 +238,6 @@ public class FProxyFactory
 
             localReturn = helper.newLocal(code, classReturn);
             Local[] localSuperArgsValue = null;
-            localThis = helper.getThis(code);
 
             MethodId methodSuper = helper.getMethod(helper.getSuperClass(), classReturn, methodName, classArgs);
 
@@ -238,11 +249,11 @@ public class FProxyFactory
                     localSuperArgsValue[i] = helper.getParameter(code, i, classArgs[i]);
                 }
 
-                code.invokeSuper(methodSuper, isReturnVoid ? null : localReturn, localThis,
+                code.invokeSuper(methodSuper, isReturnVoid ? null : localReturn, helper.getThis(code),
                         localSuperArgsValue);
             } else
             {
-                code.invokeSuper(methodSuper, isReturnVoid ? null : localReturn, localThis);
+                code.invokeSuper(methodSuper, isReturnVoid ? null : localReturn, helper.getThis(code));
             }
 
             if (isReturnVoid)
