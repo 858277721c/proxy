@@ -27,6 +27,13 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public Object intercept(Object proxy, Object[] args, FMethodProxy methodProxy)
                 {
+                    try
+                    {
+                        return methodProxy.getSuperMethod().invoke(proxy, args);
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                     return null;
                 }
             });

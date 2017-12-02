@@ -18,12 +18,12 @@ import java.lang.reflect.Modifier;
  */
 public class FProxy
 {
-    public static final String TAG = FProxy.class.getSimpleName();
-
-    public static final String DIR_NAME_DEX = "dexProxy";
+    public static final String DIR_NAME_DEX = "dexfiles";
 
     private Context mContext;
     private Class mSuperClass;
+
+    private File mDexDir;
 
     public FProxy(Context context)
     {
@@ -45,20 +45,25 @@ public class FProxy
         return mSuperClass;
     }
 
+    private File getDexDir()
+    {
+        if (mDexDir == null)
+        {
+            mDexDir = mContext.getDir(DIR_NAME_DEX, Context.MODE_PRIVATE);
+        }
+        return mDexDir;
+    }
+
     public Object newProxyInstance(FMethodInterceptor methodInterceptor) throws Exception
     {
-        final File dirDex = mContext.getExternalFilesDir(DIR_NAME_DEX);
-
-        final DexMakerHelper helper = new DexMakerHelper(mSuperClass);
-
+        DexMakerHelper helper = new DexMakerHelper(mSuperClass);
         makeProxyClass(helper);
 
-        ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), dirDex);
+        ClassLoader loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), getDexDir());
         Class<?> classSub = loader.loadClass(helper.getProxyClassName());
 
         FProxyInterface instance = (FProxyInterface) classSub.newInstance();
         instance.setMethodInterceptor$FProxy$(methodInterceptor);
-
         return instance;
     }
 
