@@ -307,7 +307,7 @@ class DexMakerHelper
      *
      * @throws Exception
      */
-    public void declareConstructors() throws Exception
+    public void declareConstructors()
     {
         Constructor[] arrConstructor = getSuperClass().getDeclaredConstructors();
 
@@ -343,7 +343,7 @@ class DexMakerHelper
 
         if (!foundConstructor)
         {
-            throw new FProxyException("cant find legal Constructor");
+            throw new RuntimeException("FProxy cant find legal Constructor");
         }
     }
 

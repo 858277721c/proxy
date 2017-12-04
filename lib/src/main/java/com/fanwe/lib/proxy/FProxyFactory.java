@@ -57,7 +57,7 @@ public class FProxyFactory
      * @return
      * @throws Exception
      */
-    public final <T> T newProxy(Class<T> clazz, final FMethodInterceptor methodInterceptor) throws Exception
+    public final <T> T newProxy(Class<T> clazz, final FMethodInterceptor methodInterceptor)
     {
         return newProxy(clazz, null, null, methodInterceptor);
     }
@@ -75,11 +75,11 @@ public class FProxyFactory
      */
     public final <T> T newProxy(Class<T> clazz,
                                 Class[] argsClass, Object[] args,
-                                final FMethodInterceptor methodInterceptor) throws Exception
+                                final FMethodInterceptor methodInterceptor)
     {
         if (methodInterceptor == null)
         {
-            throw new FProxyException("methodInterceptor must not be null");
+            throw new IllegalArgumentException("FProxy methodInterceptor must not be null");
         }
 
         if (clazz.isInterface())
@@ -100,28 +100,37 @@ public class FProxyFactory
             int modifiers = clazz.getModifiers();
             if (Modifier.isFinal(modifiers))
             {
-                throw new FProxyException("clazz must not be final");
+                throw new IllegalArgumentException("FProxy clazz must not be final");
             }
             if (Modifier.isPrivate(modifiers))
             {
-                throw new FProxyException("clazz must not be private");
+                throw new IllegalArgumentException("FProxy clazz must not be private");
             }
 
             DexMakerHelper helper = new DexMakerHelper(clazz);
             makeProxyClass(helper);
 
-            ClassLoader loader = helper.getDexMaker().generateAndLoad(clazz.getClassLoader(), getDexDir());
-            Class classProxy = loader.loadClass(helper.getProxyClassName());
+            ClassLoader loader = null;
+            Class classProxy = null;
+            Constructor constructor = null;
+            FProxyInterface proxy = null;
+            try
+            {
+                loader = helper.getDexMaker().generateAndLoad(clazz.getClassLoader(), getDexDir());
+                classProxy = loader.loadClass(helper.getProxyClassName());
+                constructor = classProxy.getDeclaredConstructor(argsClass);
 
-            Constructor constructor = classProxy.getDeclaredConstructor(argsClass);
-            FProxyInterface proxy = (FProxyInterface) constructor.newInstance(args);
-
-            proxy.setMethodInterceptor$FProxy$(methodInterceptor);
+                proxy = (FProxyInterface) constructor.newInstance(args);
+                proxy.setMethodInterceptor$FProxy$(methodInterceptor);
+            } catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
             return (T) proxy;
         }
     }
 
-    private void makeProxyClass(DexMakerHelper helper) throws Exception
+    private void makeProxyClass(DexMakerHelper helper)
     {
         // public class com/fanwe/model/Person$FProxy$ extends com/fanwe/model/Person implements FProxyInterface
         helper.declareClass(Modifier.PUBLIC, helper.getSuperClass(), FProxyInterface.class);
