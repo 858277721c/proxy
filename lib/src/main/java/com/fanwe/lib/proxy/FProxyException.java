@@ -3,7 +3,7 @@ package com.fanwe.lib.proxy;
 /**
  * 通用异常
  */
-public class FProxyException extends Exception
+public class FProxyException extends RuntimeException
 {
     public FProxyException()
     {

@@ -54,8 +54,7 @@ public class FProxyFactory
      * @param clazz             要创建代理的class
      * @param methodInterceptor 方法拦截回调对象
      * @param <T>               要创建代理的class类型
-     * @return
-     * @throws Exception
+     * @return 代理对象
      */
     public final <T> T newProxy(Class<T> clazz, final FMethodInterceptor methodInterceptor)
     {
@@ -70,8 +69,7 @@ public class FProxyFactory
      * @param args              要调用的构造方法参数
      * @param methodInterceptor 方法拦截回调对象
      * @param <T>               要创建代理的class类型
-     * @return
-     * @throws Exception
+     * @return 代理对象
      */
     public final <T> T newProxy(Class<T> clazz,
                                 Class[] argsClass, Object[] args,
@@ -79,7 +77,7 @@ public class FProxyFactory
     {
         if (methodInterceptor == null)
         {
-            throw new IllegalArgumentException("FProxy methodInterceptor must not be null");
+            throw new FProxyException("methodInterceptor must not be null");
         }
 
         if (clazz.isInterface())
@@ -100,11 +98,11 @@ public class FProxyFactory
             int modifiers = clazz.getModifiers();
             if (Modifier.isFinal(modifiers))
             {
-                throw new IllegalArgumentException("FProxy clazz must not be final");
+                throw new FProxyException("FProxy clazz must not be final");
             }
             if (Modifier.isPrivate(modifiers))
             {
-                throw new IllegalArgumentException("FProxy clazz must not be private");
+                throw new FProxyException("FProxy clazz must not be private");
             }
 
             DexMakerHelper helper = new DexMakerHelper(clazz);
@@ -124,7 +122,7 @@ public class FProxyFactory
                 proxy.setMethodInterceptor$FProxy$(methodInterceptor);
             } catch (Exception e)
             {
-                throw new RuntimeException(e);
+                throw new FProxyException(e);
             }
             return (T) proxy;
         }

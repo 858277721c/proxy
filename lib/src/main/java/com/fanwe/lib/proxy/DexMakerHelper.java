@@ -304,8 +304,6 @@ class DexMakerHelper
 
     /**
      * 声明所有父类支持的合法构造方法
-     *
-     * @throws Exception
      */
     public void declareConstructors()
     {
@@ -343,7 +341,7 @@ class DexMakerHelper
 
         if (!foundConstructor)
         {
-            throw new RuntimeException("FProxy cant find legal Constructor");
+            throw new FProxyException("cant find legal Constructor");
         }
     }
 
