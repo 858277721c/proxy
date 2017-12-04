@@ -325,7 +325,19 @@ class DexMakerHelper
             classArgs = item.getParameterTypes();
 
             Code code = declareConstructor(modifiers, classArgs);
-            code.invokeDirect(getConstructor(getSuperClass(), classArgs), null, getThis(code));
+            if (classArgs != null && classArgs.length > 0)
+            {
+                Local[] localArgs = new Local[classArgs.length];
+                for (int i = 0; i < classArgs.length; i++)
+                {
+                    localArgs[i] = getParameter(code, i, classArgs[i]);
+                }
+                code.invokeDirect(getConstructor(getSuperClass(), classArgs), null, getThis(code),
+                        localArgs);
+            } else
+            {
+                code.invokeDirect(getConstructor(getSuperClass(), classArgs), null, getThis(code));
+            }
             code.returnVoid();
         }
 
