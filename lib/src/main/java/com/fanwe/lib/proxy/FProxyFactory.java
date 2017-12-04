@@ -117,21 +117,15 @@ public class FProxyFactory
         }
     }
 
-    private void makeProxyClass(DexMakerHelper helper)
+    private void makeProxyClass(DexMakerHelper helper) throws Exception
     {
         // public class com/fanwe/model/Person$FProxy$ extends com/fanwe/model/Person implements FProxyInterface
         helper.declareClass(Modifier.PUBLIC, helper.getSuperClass(), FProxyInterface.class);
 
         // ---------- 构造方法start ----------
-        /**
-         * public com/fanwe/model/Person$FProxy$()
-         * {
-         *     super();
-         * }
-         */
-        Code code = helper.declareConstructor(Modifier.PUBLIC);
-        code.invokeDirect(helper.getTypeSuper().getConstructor(), null, helper.getThis(code));
-        code.returnVoid();
+
+        helper.declareConstructors();
+
         // ---------- 构造方法end ----------
 
         // ---------- 属性start ----------
@@ -147,7 +141,7 @@ public class FProxyFactory
          *     mMethodInterceptor = handler;
          * }
          */
-        code = helper.declareMethod(Modifier.PUBLIC,
+        Code code = helper.declareMethod(Modifier.PUBLIC,
                 Void.class, FProxyInterface.METHOD_NAME_SETMETHODINTERCEPTOR,
                 FMethodInterceptor.class);
 
@@ -187,12 +181,12 @@ public class FProxyFactory
                 String.class, Class[].class, Object[].class, Object.class);
 
         int modifiers = 0;
-
         for (Method item : arrMethod)
         {
             modifiers = item.getModifiers();
             methodName = item.getName();
             if (methodName.contains("$") ||
+                    modifiers == 0 ||
                     Modifier.isStatic(modifiers) ||
                     Modifier.isFinal(modifiers) ||
                     Modifier.isPrivate(modifiers))

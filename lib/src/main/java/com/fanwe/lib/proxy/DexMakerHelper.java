@@ -7,6 +7,8 @@ import com.android.dx.Local;
 import com.android.dx.MethodId;
 import com.android.dx.TypeId;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 /**
@@ -298,6 +300,39 @@ class DexMakerHelper
     {
         TypeId type = getType(clazz);
         return code.newLocal(type);
+    }
+
+    /**
+     * 声明所有父类支持的合法构造方法
+     *
+     * @throws Exception
+     */
+    public void declareConstructors() throws Exception
+    {
+        Constructor[] arrConstructor = getSuperClass().getDeclaredConstructors();
+
+        int modifiers = 0;
+        Class[] classArgs = null;
+        boolean foundConstructor = false;
+        for (Constructor item : arrConstructor)
+        {
+            modifiers = item.getModifiers();
+            if (Modifier.isPrivate(modifiers) || modifiers == 0)
+            {
+                continue;
+            }
+            foundConstructor = true;
+            classArgs = item.getParameterTypes();
+
+            Code code = declareConstructor(modifiers, classArgs);
+            code.invokeDirect(getConstructor(getSuperClass(), classArgs), null, getThis(code));
+            code.returnVoid();
+        }
+
+        if (!foundConstructor)
+        {
+            throw new FProxyException("cant find legal Constructor");
+        }
     }
 
 
