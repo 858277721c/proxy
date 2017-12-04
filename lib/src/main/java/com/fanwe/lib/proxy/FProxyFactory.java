@@ -10,6 +10,7 @@ import com.android.dx.Local;
 import com.android.dx.MethodId;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -104,16 +105,38 @@ public class FProxyFactory
             {
                 throw new FProxyException("FProxy clazz must not be private");
             }
+
+            DexMakerHelper helper = new DexMakerHelper(clazz);
+            makeProxyClass(helper);
+
+            ClassLoader loader = null;
+            Class classProxy = null;
+            Constructor constructor = null;
+            FProxyInterface proxy = null;
             try
             {
-                DexMakerHelper helper = new DexMakerHelper(clazz);
-                makeProxyClass(helper);
-
-                ClassLoader loader = helper.getDexMaker().generateAndLoad(clazz.getClassLoader(), getDexDir());
-                Class classProxy = loader.loadClass(helper.getProxyClassName());
-                Constructor constructor = classProxy.getDeclaredConstructor(argsClass);
-
-                FProxyInterface proxy = (FProxyInterface) constructor.newInstance(args);
+                loader = helper.getDexMaker().generateAndLoad(getClass().getClassLoader(), getDexDir());
+            } catch (IOException e)
+            {
+                throw new FProxyException(e);
+            }
+            try
+            {
+                classProxy = loader.loadClass(helper.getProxyClassName());
+            } catch (ClassNotFoundException e)
+            {
+                throw new FProxyException(e);
+            }
+            try
+            {
+                constructor = classProxy.getDeclaredConstructor(argsClass);
+            } catch (NoSuchMethodException e)
+            {
+                throw new FProxyException(e);
+            }
+            try
+            {
+                proxy = (FProxyInterface) constructor.newInstance(args);
                 proxy.setMethodInterceptor$FProxy$(methodInterceptor);
                 return (T) proxy;
             } catch (Exception e)
