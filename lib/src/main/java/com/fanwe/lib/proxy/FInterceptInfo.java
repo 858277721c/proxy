@@ -53,7 +53,7 @@ public class FInterceptInfo
             return mMethodSuper;
         } catch (Exception e)
         {
-            throw new RuntimeException(e);
+            throw new FProxyException(e);
         }
     }
 
@@ -73,7 +73,7 @@ public class FInterceptInfo
             return mMethod;
         } catch (Exception e)
         {
-            throw new RuntimeException(e);
+            throw new FProxyException(e);
         }
     }
 
@@ -90,7 +90,7 @@ public class FInterceptInfo
             return getMethodInvokeSuper().invoke(getProxy(), args);
         } catch (Exception e)
         {
-            throw new RuntimeException(e);
+            throw new FProxyException(e);
         }
     }
 
@@ -108,7 +108,7 @@ public class FInterceptInfo
             return getMethod().invoke(object, args);
         } catch (Exception e)
         {
-            throw new RuntimeException(e);
+            throw new FProxyException(e);
         }
     }
 }
