@@ -102,6 +102,10 @@ public class FProxyFactory
             {
                 throw new FProxyException("clazz must not be final");
             }
+            if (Modifier.isPrivate(modifiers))
+            {
+                throw new FProxyException("clazz must not be private");
+            }
 
             DexMakerHelper helper = new DexMakerHelper(clazz);
             makeProxyClass(helper);
