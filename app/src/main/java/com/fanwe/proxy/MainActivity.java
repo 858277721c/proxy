@@ -27,19 +27,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             public Object intercept(FInterceptInfo info, Object[] args)
             {
-                try
-                {
-                    // 拦截到代理方法被执行
-                    String methodName = info.getMethod().getName(); // 被拦截的方法名称
-                    Log.i(TAG, "intercept method---------->" + methodName);
-                    Object result = info.invokeSuper(args); // 调用代理对象父类的方法
-                    info.getMethod().invoke(mPerson, args); // 触发mPerson对象的方法
-                    return result;
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                return null;
+                // 拦截到代理方法被执行
+                String methodName = info.getMethod().getName(); // 被拦截的方法名称
+                Log.i(TAG, "intercept method---------->" + methodName);
+                Object result = info.invokeSuper(args); // 调用代理对象父类的方法
+                info.invokeObject(mPerson, args); // 触发mPerson对象的方法
+                return result;
             }
         });
 

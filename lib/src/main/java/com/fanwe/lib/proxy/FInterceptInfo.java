@@ -50,11 +50,11 @@ public class FInterceptInfo
                 mMethodSuper = getProxy().getClass().getDeclaredMethod(mMethodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX,
                         mArgsClass);
             }
-        } catch (NoSuchMethodException e)
+            return mMethodSuper;
+        } catch (Exception e)
         {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return mMethodSuper;
     }
 
     /**
@@ -70,22 +70,45 @@ public class FInterceptInfo
             {
                 mMethod = getProxy().getClass().getSuperclass().getDeclaredMethod(mMethodName, mArgsClass);
             }
-        } catch (NoSuchMethodException e)
+            return mMethod;
+        } catch (Exception e)
         {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return mMethod;
     }
 
     /**
-     * 调用代理的父类方法
+     * 调用代理对象父类的方法
      *
      * @param args
      * @return
-     * @throws Exception
      */
-    public Object invokeSuper(Object[] args) throws Exception
+    public Object invokeSuper(Object[] args)
     {
-        return getMethodInvokeSuper().invoke(getProxy(), args);
+        try
+        {
+            return getMethodInvokeSuper().invoke(getProxy(), args);
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 调用某个对象的方法
+     *
+     * @param object
+     * @param args
+     * @return
+     */
+    public Object invokeObject(Object object, Object[] args)
+    {
+        try
+        {
+            return getMethod().invoke(object, args);
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }
