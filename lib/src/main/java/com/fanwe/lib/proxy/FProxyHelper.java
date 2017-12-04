@@ -19,9 +19,17 @@ public class FProxyHelper
     public static Object notifyInterceptor(String methodName, Class[] argsClass, Object[] argsValue,
                                            Object proxy)
     {
-        FProxyInterface proxyInterface = (FProxyInterface) proxy;
-
         FInterceptInfo info = new FInterceptInfo(proxy, methodName, argsClass);
-        return proxyInterface.getMethodInterceptor$FProxy$().intercept(info, argsValue);
+
+        FProxyInterface proxyInterface = (FProxyInterface) proxy;
+        FMethodInterceptor methodInterceptor = proxyInterface.getMethodInterceptor$FProxy$();
+        if (methodInterceptor != null)
+        {
+            return methodInterceptor.intercept(info, argsValue);
+        } else
+        {
+            // TODO 调用父类的方法
+            return null;
+        }
     }
 }
