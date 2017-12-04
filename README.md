@@ -1,7 +1,7 @@
 ## proxy
 Android动态创建代理对象<br>
 * 接口的代理->内部采用java原生方式实现
-* 普通类的代理->内部采用[dexmaker](https://github.com/linkedin/dexmaker)实现
+* 普通类的代理->内部采用[dexmaker](https://github.com/linkedin/dexmaker)实现，支持有参和无参构造方法
 
 ## Gradle
 [![](https://jitpack.io/v/zj565061763/proxy.svg)](https://jitpack.io/#zj565061763/proxy)
