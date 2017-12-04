@@ -104,27 +104,22 @@ public class FProxyFactory
             {
                 throw new FProxyException("FProxy clazz must not be private");
             }
-
-            DexMakerHelper helper = new DexMakerHelper(clazz);
-            makeProxyClass(helper);
-
-            ClassLoader loader = null;
-            Class classProxy = null;
-            Constructor constructor = null;
-            FProxyInterface proxy = null;
             try
             {
-                loader = helper.getDexMaker().generateAndLoad(clazz.getClassLoader(), getDexDir());
-                classProxy = loader.loadClass(helper.getProxyClassName());
-                constructor = classProxy.getDeclaredConstructor(argsClass);
+                DexMakerHelper helper = new DexMakerHelper(clazz);
+                makeProxyClass(helper);
 
-                proxy = (FProxyInterface) constructor.newInstance(args);
+                ClassLoader loader = helper.getDexMaker().generateAndLoad(clazz.getClassLoader(), getDexDir());
+                Class classProxy = loader.loadClass(helper.getProxyClassName());
+                Constructor constructor = classProxy.getDeclaredConstructor(argsClass);
+
+                FProxyInterface proxy = (FProxyInterface) constructor.newInstance(args);
                 proxy.setMethodInterceptor$FProxy$(methodInterceptor);
+                return (T) proxy;
             } catch (Exception e)
             {
                 throw new FProxyException(e);
             }
-            return (T) proxy;
         }
     }
 
