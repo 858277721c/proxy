@@ -1,5 +1,7 @@
 package com.fanwe.lib.proxy;
 
+import java.lang.reflect.Method;
+
 /**
  * 这个类的方法为代理对象调用的
  */
@@ -28,8 +30,21 @@ public class FProxyHelper
             return methodInterceptor.intercept(info, argsValue);
         } else
         {
-            // TODO 调用父类的方法
-            return null;
+            return executeSuperMethod(methodName, argsClass, argsValue, proxy);
+        }
+    }
+
+    public static Object executeSuperMethod(String methodName, Class[] argsClass, Object[] argsValue,
+                                            Object proxy)
+    {
+        try
+        {
+            Method methodSuper = proxy.getClass().getDeclaredMethod(methodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX,
+                    argsClass);
+            return methodSuper.invoke(proxy, argsValue);
+        } catch (Exception e)
+        {
+            throw new FProxyException(e);
         }
     }
 }

@@ -319,7 +319,7 @@ public class FProxyFactory
 
             // 创建调用父类的方法
             methodNameSuper = methodName + FProxyInterface.PROXY_CLASS_INVOKE_SUPER_METHOD_SUFFIX;
-            code = helper.declareMethod(item.getModifiers(), classReturn, methodNameSuper, classArgs);
+            code = helper.declareMethod(Modifier.PUBLIC, classReturn, methodNameSuper, classArgs);
 
             localReturn = helper.newLocal(code, classReturn);
             Local[] localArgsValueSuper = null;
