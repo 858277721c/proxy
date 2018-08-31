@@ -148,7 +148,7 @@ public class FProxyFactory
 
     private void makeProxyClass(DexMakerHelper helper)
     {
-        // public class com/fanwe/model/Person$FProxy$ extends com/fanwe/model/Person implements FProxyInterface
+        // public class com/sd/model/Person$FProxy$ extends com/sd/model/Person implements FProxyInterface
         helper.declareClass(Modifier.PUBLIC, helper.getSuperClass(), FProxyInterface.class);
 
         // ---------- 构造方法start ----------
