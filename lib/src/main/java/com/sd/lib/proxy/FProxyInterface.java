@@ -1,4 +1,4 @@
-package com.fanwe.lib.proxy;
+package com.sd.lib.proxy;
 
 /**
  * 代理要实现的接口

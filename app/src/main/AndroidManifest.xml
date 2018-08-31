@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fanwe.proxy">
+    package="com.sd.proxy">
 
     <application
         android:allowBackup="true"

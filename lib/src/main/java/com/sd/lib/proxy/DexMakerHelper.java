@@ -1,4 +1,4 @@
-package com.fanwe.lib.proxy;
+package com.sd.lib.proxy;
 
 import com.android.dx.Code;
 import com.android.dx.DexMaker;
